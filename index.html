@@ -1,174 +1,431 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>GVR_TRAVLP - Weekend Traveller</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GVR_TRAVLP — Weekend Trips (gvrtra)</title>
+
+  <!-- SEO -->
+  <meta name="description" content="GVR_TRAVLP — Weekend trips from Hyderabad. Book trekking, devotional, waterfalls and combo trips. Search gvrtra to find us." />
+  <meta name="keywords" content="gvrtra, GVR_TRAVLP, weekend trips, Hyderabad trips, Papikondalu, Bhadrachalam, Ananthagiri" />
+  <meta property="og:title" content="GVR_TRAVLP — Weekend Trips" />
+  <meta property="og:description" content="Book weekend trips — trekking, devotional, waterfalls and combo trips. Pay online and register." />
+  <meta property="og:image" content="assets/logo.png" />
+  <meta name="author" content="Ram (GVR)" />
+
   <style>
-    :root{--accent:#ff7a18;--muted:#666;--bg:#fbf7f0}
-    body{font-family:Inter,system-ui,Segoe UI,Arial;color:#222;background:var(--bg);margin:0}
-    .container{max-width:980px;margin:24px auto;padding:18px}
-    header{display:flex;align-items:center;gap:12px}
-    .logo{width:84px;height:84px;border-radius:12px;object-fit:contain}
+    :root{
+      --accent:#ff7a18; --muted:#666; --bg:#fbf7f0; --card:#ffffff;
+      --maxW:1100px; --radius:12px;
+    }
+    *{box-sizing:border-box}
+    body{font-family:Inter, system-ui, Arial, sans-serif; margin:0; color:#222; background:var(--bg)}
+    .wrap{max-width:var(--maxW); margin:20px auto; padding:18px}
+    header{display:flex; gap:14px; align-items:center}
+    .logo{width:86px; height:86px; border-radius:14px; object-fit:contain}
     h1{margin:0;font-size:22px}
     .sub{color:var(--muted);font-size:14px}
-    .hero{display:grid;grid-template-columns:1fr 360px;gap:18px;margin-top:18px}
-    .card{background:white;border-radius:12px;padding:14px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
-    .yt{width:100%;height:220px;border-radius:8px;overflow:hidden}
-    .gallery{display:flex;gap:8px;margin-top:10px}
-    .gallery img{width:100px;height:70px;object-fit:cover;border-radius:8px}
-    .trips{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:14px}
-    .trip{padding:12px;border-radius:10px;background:linear-gradient(#fff,#fff)}
-    .trip h3{margin:0;font-size:16px}
-    .price{font-weight:700;color:var(--accent);font-size:18px;margin-top:8px}
-    form{display:flex;flex-direction:column;gap:8px}
-    input,select,button{padding:10px;border-radius:8px;border:1px solid #e6e6e6;font-size:14px}
-    button{background:var(--accent);color:white;border:none;cursor:pointer}
-    footer{margin-top:24px;color:var(--muted);font-size:13px;text-align:center}
-    @media(max-width:880px){.hero{grid-template-columns:1fr}}
+    .hero{display:grid; grid-template-columns:1fr 380px; gap:18px; margin-top:18px}
+    .card{background:var(--card); border-radius:var(--radius); padding:14px; box-shadow:0 6px 20px rgba(0,0,0,0.06)}
+    .media{border-radius:10px; overflow:hidden; height:260px}
+    .gallery{display:flex; gap:8px; margin-top:10px}
+    .gallery img{width:100px; height:70px; object-fit:cover; border-radius:8px}
+    .trips{margin-top:14px}
+    .groupTitle{font-weight:700; margin:10px 0 8px; font-size:16px}
+    .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px}
+    .tripCard{background:linear-gradient(#fff,#fff); border-radius:10px; padding:12px; min-height:110px}
+    .tripCard h4{margin:6px 0 0;font-size:16px}
+    .price{color:var(--accent); font-weight:700; margin-top:8px; font-size:18px}
+    /* Right column */
+    aside .card{position:sticky; top:18px}
+    form{display:flex; flex-direction:column; gap:8px}
+    input, select, button, textarea{padding:10px; border-radius:8px; border:1px solid #eaeaea; font-size:14px}
+    button{background:var(--accent); color:#fff; border:none; cursor:pointer}
+    .muted{color:var(--muted); font-size:13px}
+    .payBox{display:flex; gap:10px; align-items:center}
+    .qr{width:120px; height:120px; object-fit:contain; border-radius:8px; background:#fff; padding:6px}
+    .small{font-size:13px}
+    .actions{display:flex; gap:8px; margin-top:8px}
+    .ghost{background:#fff;color:var(--accent);border:1px solid #eee}
+    footer{margin-top:22px; color:var(--muted); text-align:center; padding-bottom:40px}
+    @media(max-width:900px){
+      .hero{grid-template-columns:1fr}
+      .media{height:200px}
+      .qr{width:100px;height:100px}
+    }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="wrap">
     <header>
-      <!-- Replace assets/logo.png with your logo file in the repo -->
-      <img src="assets/logo.png" alt="GVR_TRAVLP logo" class="logo" id="siteLogo">
+      <img src="assets/logo.png" alt="GVR_TRAVLP" class="logo" id="siteLogo">
       <div>
         <h1>GVR_TRAVLP — Weekend Traveller</h1>
-        <div class="sub">YouTube: @gvryalla · Hyderabad trips · Strangers Meet</div>
+        <div class="sub">Follow @gvryalla · Search "gvrtra" to find us · Hyderabad trips & weekend adventures</div>
       </div>
     </header>
 
     <section class="hero">
+      <!-- LEFT: media + trips -->
       <div>
         <div class="card">
-          <div class="yt">
-            <!-- YouTube embed: change the src id to match your video (pEG-jPP4x5c) -->
-            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/pEG-jPP4x5c" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <div class="media">
+            <!-- Instagram reel embed -->
+            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DO0y0pnEYBv/" data-instgrm-version="14" style="background:#fff; margin:0 auto; max-width:540px; min-width:326px; padding:0">
+            </blockquote>
           </div>
 
-          <h2 style="font-size:18px;margin-top:12px">What you'll see</h2>
-          <p class="sub">This module shows trip highlights, visiting places' images and a simple registration form. Budget breakdowns are hidden — only the final cost per person is shown.</p>
+          <h2 style="font-size:18px; margin-top:12px">What you'll see</h2>
+          <p class="muted">Trip highlights, visiting places' images and a simple online pay & register flow. Select weekend date (Sat or Sun) and pay using UPI/QR to confirm.</p>
 
           <div class="gallery" id="placesGallery">
-            <!-- Placeholders: put images under assets/places/ (e.g. assets/places/1.jpg) -->
-            <img src="assets/places/1.jpg" alt="place1">
-            <img src="assets/places/2.jpg" alt="place2">
-            <img src="assets/places/3.jpg" alt="place3">
-            <img src="assets/places/4.jpg" alt="place4">
+            <!-- keep default images; update in assets/places/ if needed -->
+            <img src="assets/places/1.jpg" alt="place1" onerror="this.style.display='none'">
+            <img src="assets/places/2.jpg" alt="place2" onerror="this.style.display='none'">
+            <img src="assets/places/3.jpg" alt="place3" onerror="this.style.display='none'">
+            <img src="assets/places/4.jpg" alt="place4" onerror="this.style.display='none'">
           </div>
         </div>
 
-        <div class="trips" style="margin-top:12px">
-          <!-- Each trip card shows only final total cost per person -->
-          <div class="trip card">
-            <h3>Hyderabad → Bhadrachalam</h3>
-            <div class="price">₹1,799 / person</div>
-            <p class="sub">2 days · Includes transport and food (final cost shown)</p>
-          </div>
+        <div class="trips">
+          <!-- Trips grouped into categories -->
+          <div class="card" style="margin-top:12px">
+            <div class="groupTitle">🟦 TREKKING / NATURE</div>
+            <div class="grid" id="trekkingGrid"></div>
 
-          <div class="trip card">
-            <h3>Hyderabad → Papikondalu (Boat)</h3>
-            <div class="price">₹2,299 / person</div>
-            <p class="sub">1 night · Boat sightseeing (final cost shown)</p>
-          </div>
+            <div class="groupTitle" style="margin-top:14px">🟦 DEVOTIONAL</div>
+            <div class="grid" id="devotionalGrid"></div>
 
-          <div class="trip card">
-            <h3>Weekend Explore — Local</h3>
-            <div class="price">₹999 / person</div>
-            <p class="sub">One-day local trip</p>
+            <div class="groupTitle" style="margin-top:14px">🟦 WATERFALLS / NATURE</div>
+            <div class="grid" id="waterfallsGrid"></div>
+
+            <div class="groupTitle" style="margin-top:14px">🟦 ANDHRA PRADESH TRIPS</div>
+            <div class="grid" id="apGrid"></div>
+
+            <div class="groupTitle" style="margin-top:14px">🟦 KARNATAKA TRIPS</div>
+            <div class="grid" id="knGrid"></div>
+
+            <div class="groupTitle" style="margin-top:14px">🟦 MAHARASHTRA TRIPS</div>
+            <div class="grid" id="mhGrid"></div>
+
+            <div class="groupTitle" style="margin-top:14px">🟨 ANDHRA PRADESH EXTRA PLACES</div>
+            <div class="grid" id="extraGrid"></div>
+
+            <div class="groupTitle" style="margin-top:14px">⭐ COMBO TRIPS</div>
+            <div class="grid" id="comboGrid"></div>
           </div>
         </div>
-
       </div>
 
+      <!-- RIGHT: registration & payment -->
       <aside>
         <div class="card">
-          <h3>Register your spot</h3>
-          <p class="sub">Enter your details and mobile number. We'll notify the organizer (GVR) when someone registers.</p>
+          <h3>Register & Pay</h3>
+          <p class="muted">Pay online (UPI/QR) and then submit registration. We'll notify the organizer (GVR).</p>
 
-          <!--
-            FORM: This is configured to use Formspree (or any other form backend).
-            1) Replace FORM_ENDPOINT with your Formspree endpoint (or Netlify Forms endpoint).
-            2) If you prefer Google Forms, replace the form action with your Google Form action URL and input names.
-          -->
+          <label class="small">Select Trip</label>
+          <select id="tripSelect"></select>
 
-          <form id="registerForm">
-            <input type="text" id="name" name="name" placeholder="Full name" required>
-            <input type="tel" id="mobile" name="mobile" placeholder="Mobile number (India: 10 digits)" required pattern="[0-9]{10}">
-            <select id="trip" name="trip">
-              <option value="Bhadrachalam">Hyderabad → Bhadrachalam — ₹1,799</option>
-              <option value="Papikondalu">Hyderabad → Papikondalu — ₹2,299</option>
-              <option value="Local">Weekend Local — ₹999</option>
-            </select>
+          <label class="small">Select Weekend Date</label>
+          <select id="dateSelect"></select>
 
-            <button type="submit">Register & Notify</button>
+          <div style="margin-top:10px" class="card">
+            <div class="payBox">
+              <img src="assets/qr.png" alt="QR" class="qr" id="qrImg" onerror="this.style.display='none'">
+              <div>
+                <div style="font-weight:700">UPI ID</div>
+                <div style="font-size:18px; color:var(--accent); font-weight:700" id="upiText">27722222@ybl</div>
+                <div class="small muted">Scan QR or copy UPI ID</div>
+
+                <div class="actions">
+                  <button type="button" onclick="copyUPI()" class="ghost">Copy UPI ID</button>
+                  <button type="button" onclick="openPayLink()" class="ghost">Open UPI App</button>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:10px" class="muted small">
+              After you pay, click <strong>I have paid</strong> to continue registration.
+            </div>
+
+            <div class="actions" style="margin-top:10px">
+              <button id="paidBtn" type="button" onclick="onPaidClicked()">I have paid</button>
+              <button type="button" class="ghost" onclick="showInstructions()">Payment help</button>
+            </div>
+          </div>
+
+          <!-- Registration form (hidden until they click 'I have paid') -->
+          <form id="registerForm" style="display:none; margin-top:12px">
+            <label class="small">Full name</label>
+            <input type="text" id="name" required placeholder="Your name">
+
+            <label class="small">Mobile (10 digits)</label>
+            <input type="tel" id="mobile" placeholder="9390xxxxxxx" pattern="[0-9]{10}" required>
+
+            <label class="small">Transaction ID (optional)</label>
+            <input type="text" id="txn" placeholder="UPI transaction id / reference">
+
+            <label class="small">Notes (optional)</label>
+            <textarea id="notes" rows="2" placeholder="Any notes (e.g. pickup point)"></textarea>
+
+            <button type="submit">Confirm & Notify (Send)</button>
+
+            <p id="formMsg" class="muted small" style="margin-top:8px"></p>
           </form>
 
-          <p id="formMsg" class="sub" style="margin-top:8px"></p>
-
           <hr style="margin-top:12px">
-          <p class="sub">Or contact directly:</p>
-          <p><a id="waLink" href="#" target="_blank">Message on WhatsApp</a></p>
+
+          <p class="muted small">Contact organizer directly:</p>
+          <p style="margin:6px 0"><a id="waLink" href="#" target="_blank">Message on WhatsApp</a></p>
+          <p style="margin:6px 0"><a id="smsLink" href="#" target="_blank">Send SMS</a></p>
+
+          <div style="margin-top:8px" class="muted small">Email: <a href="mailto:gangavenkataramana@gmail.com">gangavenkataramana@gmail.com</a></div>
         </div>
       </aside>
     </section>
 
-    <footer>
-      © GVR_TRAVLP — Travel far and feed with love · Follow @gvryalla
-    </footer>
+    <footer class="muted">© GVR_TRAVLP — Travel far and feed with love · Follow @gvryalla</footer>
   </div>
 
+  <!-- Instagram embed script -->
+  <script async src="//www.instagram.com/embed.js"></script>
+
   <script>
-    // --- CONFIG: update these values before publishing ---
-    const FORM_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID'; // <-- replace with your Formspree endpoint
-    const ADMIN_EMAIL = 'youremail@example.com'; // <-- used only in instructions; Formspree will send emails to form owner
-    const ADMIN_WHATSAPP = '+91XXXXXXXXXX'; // <-- replace with your phone number in international format for WA link
+    /***********************
+     Config values
+    ***********************/
+    const ADMIN_EMAIL = 'gangavenkataramana@gmail.com';
+    const ADMIN_PHONE = '+919390184813'; // whatsapp +91 9390184813
+    const UPI_ID = '27722222@ybl';
+    const PAY_LINK = ''; // optional: put a payment URL here if you have one (e.g. PhonePe / Paytm deep link)
+    const DEFAULT_WA_MESSAGE = 'Hi GVR, I want to know about upcoming trips.';
+    const SITE_SEARCH_KEYWORDS = ['gvrtra','GVR_TRAVLP','gvryalla'];
 
-    // Set WhatsApp link for direct contact (opens WhatsApp chat)
-    const waLinkEl = document.getElementById('waLink');
-    waLinkEl.href = `https://wa.me/${ADMIN_WHATSAPP.replace(/\D/g,'')}?text=${encodeURIComponent('Hello GVR, I want to know about upcoming trips.')}`;
+    /***********************
+     Trips data (as provided)
+    ***********************/
+    const trips = {
+      trekking: [
+        {title: 'Ananthagiri Hills', price: '₹993'},
+        {title: 'Bhongir Fort', price: '₹905'},
+        {title: 'Koil Sagar + Koilkonda', price: '₹1,250'},
+        {title: 'Pocharam + Nizam Sagar', price: '₹1,122'},
+        {title: 'Bogatha Waterfalls', price: '₹1,525'}
+      ],
+      devotional: [
+        {title: 'Yadadri', price: '₹930'},
+        {title: 'Vemulawada', price: '₹1,250'},
+        {title: 'Basara', price: '₹1,460'},
+        {title: 'Kondagattu', price: '₹1,393'},
+        {title: 'Bhadrachalam', price: '₹1,800'}
+      ],
+      waterfalls: [
+        {title: 'Papikondalu', price: '₹1,765'},
+        {title: 'Laknavaram', price: '₹1,460'},
+        {title: 'Ramappa Temple + Lake', price: '₹1,495'},
+        {title: 'Kuntala + Pochera', price: '₹1,720'},
+        {title: 'Gayatri Waterfalls', price: '₹1,645'}
+      ],
+      ap: [
+        {title: 'Srisailam', price: '₹1,525'},
+        {title: 'Horsley Hills', price: '₹2,670'},
+        {title: 'Gandikota', price: '₹2,065'},
+        {title: 'Ahobilam', price: '₹1,995'}
+      ],
+      kn: [
+        {title: 'Bidar', price: '₹1,215'},
+        {title: 'Basavakalyan Fort', price: '₹1,460'},
+        {title: 'Hampi', price: '₹2,065'}
+      ],
+      mh: [
+        {title: 'Nanded (Hazur Sahib)', price: '₹1,720'},
+        {title: 'Ajanta & Ellora', price: '₹2,600'}
+      ],
+      extra: [
+        {title: 'Araku Valley', price: '₹2,890'},
+        {title: 'Katiki Waterfalls', price: '₹2,960'},
+        {title: 'Borra Caves', price: '₹2,960'}
+      ],
+      combo: [
+        {title: 'Combo 1: Bhadrachalam + Papikondalu', price: '₹1,900'},
+        {title: 'Combo 2: Laknavaram + Ramappa Temple', price: '₹1,600'},
+        {title: 'Combo 3: Ananthagiri Hills + Kotepally', price: '₹1,150'},
+        {title: 'Combo 4: Srisailam Full Trip', price: '₹1,650'},
+        {title: 'Combo 5: Gandikota + Belum Caves', price: '₹2,250'},
+        {title: 'Combo 6: Kuntala + Pochera + Basara', price: '₹1,950'},
+        {title: 'Combo 7: Hampi', price: '₹2,200'},
+        {title: 'Combo 8: Ahobilam Trek', price: '₹2,150'}
+      ]
+    };
 
-    // Simple client-side form submit to Formspree + open mailto (fallback) + show friendly message
-    document.getElementById('registerForm').addEventListener('submit', async function(e){
+    /***********************
+     Render trip cards
+    ***********************/
+    function renderGrid(containerId, list){
+      const cont = document.getElementById(containerId);
+      list.forEach(t => {
+        const el = document.createElement('div');
+        el.className = 'tripCard';
+        el.innerHTML = `<h4>${t.title}</h4><div class="price">${t.price}</div>`;
+        cont.appendChild(el);
+      });
+    }
+    renderGrid('trekkingGrid', trips.trekking);
+    renderGrid('devotionalGrid', trips.devotional);
+    renderGrid('waterfallsGrid', trips.waterfalls);
+    renderGrid('apGrid', trips.ap);
+    renderGrid('knGrid', trips.kn);
+    renderGrid('mhGrid', trips.mh);
+    renderGrid('extraGrid', trips.extra);
+    renderGrid('comboGrid', trips.combo);
+
+    /***********************
+     Populate trip select
+    ***********************/
+    const tripSelect = document.getElementById('tripSelect');
+    function addOption(text){
+      const o = document.createElement('option');
+      o.value = text; o.textContent = text;
+      tripSelect.appendChild(o);
+    }
+    Object.values(trips).flat().forEach(t => addOption(`${t.title} — ${t.price}`));
+
+    /***********************
+     Generate weekend dates (Sat & Sun) from today to 2026-12-31
+    ***********************/
+    function generateWeekendDates(start, end){
+      const arr = [];
+      const d = new Date(start.getTime());
+      // move back one day to ensure we check start itself
+      while(d <= end){
+        const day = d.getDay(); // 0 Sun, 6 Sat
+        if(day === 0 || day === 6){
+          arr.push(new Date(d.getTime()));
+        }
+        d.setDate(d.getDate() + 1);
+      }
+      return arr;
+    }
+
+    // Use today's date (browser) but ensure min is 2025-12-03 as per request (or current)
+    const today = new Date();
+    const startDate = today; // starts from today
+    const endDate = new Date('2026-12-31T23:59:59');
+
+    const weekends = generateWeekendDates(startDate, endDate);
+    const dateSelect = document.getElementById('dateSelect');
+    weekends.forEach(dt => {
+      const opt = document.createElement('option');
+      const dd = dt.toLocaleDateString(undefined, {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
+      opt.value = dt.toISOString();
+      opt.textContent = dd;
+      dateSelect.appendChild(opt);
+    });
+
+    /***********************
+     Pay & Register flow
+    ***********************/
+    function copyUPI(){
+      navigator.clipboard && navigator.clipboard.writeText(UPI_ID).then(()=> {
+        alert('UPI ID copied: ' + UPI_ID);
+      }, ()=> {
+        // fallback
+        const ta = document.createElement('textarea'); ta.value = UPI_ID; document.body.appendChild(ta); ta.select();
+        try{ document.execCommand('copy'); alert('UPI ID copied: ' + UPI_ID); }catch(e){ alert('Copy failed — please copy manually: ' + UPI_ID); }
+        ta.remove();
+      });
+    }
+
+    function openPayLink(){
+      if(PAY_LINK && PAY_LINK.trim()){
+        window.open(PAY_LINK, '_blank');
+      } else {
+        // Try to open UPI deep link (this works on mobile UPI apps)
+        const upiUri = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent('GVR_TRAVLP')}&tn=${encodeURIComponent('Trip payment')}`;
+        // open upi uri
+        window.location.href = upiUri;
+        // if not supported, also open qr in new tab so user can long-press
+        window.open('assets/qr.png', '_blank');
+      }
+    }
+
+    function showInstructions(){
+      alert('Use any UPI app to scan the QR or copy the UPI ID. After payment click "I have paid" and complete registration.');
+    }
+
+    function onPaidClicked(){
+      // reveal registration form
+      document.getElementById('registerForm').style.display = 'flex';
+      // scroll to form
+      document.getElementById('registerForm').scrollIntoView({behavior:'smooth'});
+    }
+
+    // set WA and SMS links for direct contact
+    const waLink = document.getElementById('waLink');
+    waLink.href = `https://wa.me/${ADMIN_PHONE.replace(/\D/g,'')}?text=${encodeURIComponent(DEFAULT_WA_MESSAGE)}`;
+    const smsLink = document.getElementById('smsLink');
+    smsLink.href = `sms:${ADMIN_PHONE.replace(/\D/g,'')}&body=${encodeURIComponent(DEFAULT_WA_MESSAGE)}`;
+
+    /***********************
+     Form submission: no backend required
+     - will open mailto to send registration details to ADMIN_EMAIL
+     - also open WhatsApp chat to notify admin with prefilled text
+    ***********************/
+    document.getElementById('registerForm').addEventListener('submit', function(e){
       e.preventDefault();
       const name = document.getElementById('name').value.trim();
       const mobile = document.getElementById('mobile').value.trim();
-      const trip = document.getElementById('trip').value;
-      const data = {name, mobile, trip, source: location.href};
+      const notes = document.getElementById('notes').value.trim();
+      const txn = document.getElementById('txn').value.trim();
+      const trip = document.getElementById('tripSelect').value;
+      const dateIso = document.getElementById('dateSelect').value;
+      const dateReadable = new Date(dateIso).toLocaleDateString(undefined, {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
 
-      // show immediate confirmation
-      const msgEl = document.getElementById('formMsg');
-      msgEl.textContent = 'Registering...';
-
-      try{
-        // send to Formspree (or whichever form backend you set)
-        const res = await fetch(FORM_ENDPOINT, {
-          method: 'POST',
-          headers: {'Content-Type':'application/json','Accept':'application/json'},
-          body: JSON.stringify(data)
-        });
-
-        if(res.ok){
-          msgEl.textContent = 'Thank you! You are registered. Organizer will be notified.';
-
-          // Optionally, open WhatsApp chat window to notify admin (this requires admin phone to be configured)
-          // We open in a small window so the user sees the notification step — this is optional and can be removed.
-          const waUrl = `https://wa.me/${ADMIN_WHATSAPP.replace(/\D/g,'')}?text=${encodeURIComponent(`New registration: ${name} (${mobile}) for ${trip}`)}`;
-          // open notification in new tab
-          window.open(waUrl,'_blank');
-
-          // reset form after success
-          document.getElementById('registerForm').reset();
-        } else {
-          // fallback: open mailto to notify admin and show friendly message
-          msgEl.innerHTML = 'Registration failed (backend). <a href="mailto:'+ADMIN_EMAIL+'?subject=Registration%20Failed&body='+encodeURIComponent(JSON.stringify(data))+'">Notify admin by email</a>';
-        }
-      }catch(err){
-        console.error(err);
-        msgEl.innerHTML = 'Error sending registration. <a href="mailto:'+ADMIN_EMAIL+'?subject=Registration&body='+encodeURIComponent(JSON.stringify(data))+'">Send email to admin</a>';
+      if(!name || !mobile.match(/^\d{10}$/)){
+        alert('Please enter your name and a valid 10-digit mobile number.');
+        return;
       }
+
+      const regObj = {
+        name, mobile, trip, date: dateReadable, txn, notes, submittedAt: new Date().toISOString()
+      };
+
+      // 1) open mail client to send registration to admin (mailto)
+      const subject = encodeURIComponent('New Trip Registration — ' + trip);
+      const body = encodeURIComponent('Registration details:\n' + JSON.stringify(regObj, null, 2));
+      const mailto = `mailto:${ADMIN_EMAIL}?subject=${subject}&body=${body}`;
+      window.open(mailto, '_blank');
+
+      // 2) open WhatsApp to notify admin
+      const waMsg = encodeURIComponent(`New registration:\nName: ${name}\nMobile: ${mobile}\nTrip: ${trip}\nDate: ${dateReadable}\nTxn: ${txn || '—'}\nNotes: ${notes || '—'}`);
+      const waUrl = `https://wa.me/${ADMIN_PHONE.replace(/\D/g,'')}?text=${waMsg}`;
+      window.open(waUrl, '_blank');
+
+      // 3) show success message to user and reset form
+      const msgEl = document.getElementById('formMsg');
+      msgEl.textContent = 'Registration submitted. We opened your mail app and WhatsApp to notify the organizer. If nothing opened, please email to ' + ADMIN_EMAIL + ' or message ' + ADMIN_PHONE;
+      document.getElementById('registerForm').reset();
+      // optionally hide form after submission
+      setTimeout(()=>{ document.getElementById('registerForm').style.display = 'none'; }, 2500);
     });
+
+    /***********************
+     Small UX: when tripSelect changes, scroll to top of right card
+    ***********************/
+    tripSelect.addEventListener('change', ()=> {
+      // nothing for now - but keeps selection stable
+    });
+
+    /***********************
+     Accessibility: allow user to copy upi by clicking upi text
+    ***********************/
+    document.getElementById('upiText').addEventListener('click', copyUPI);
+
+    /***********************
+     Make "gvrtra" easily searchable (meta tags above).
+     NOTE: site visibility in Google requires hosting + indexing in Google Search Console.
+    ***********************/
+    // Optionally automatically add meta keywords (already present)
   </script>
 </body>
 </html>
