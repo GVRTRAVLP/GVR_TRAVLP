@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GVR_TRAVLP – Weekend Traveller</title>
+    <link rel="manifest" href="manifest.json" />
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background:#f6f6f6; }
+        header { background:#222; padding:20px; color:white; text-align:center; font-size:26px; }
+        .container { padding:20px; max-width:900px; margin:auto; }
+        .trip { background:white; padding:15px; margin-bottom:15px; border-radius:10px; }
+        .trip img { width:100%; border-radius:10px; margin-top:10px; }
+        .calc-box { background:white; padding:20px; border-radius:10px; margin-top:20px; }
+        label { font-weight:bold; }
+        input { width:100%; padding:6px; margin-bottom:10px; }
+        button { padding:10px 20px; background:#222; color:white; border:none; cursor:pointer; border-radius:6px; }
+        button:hover { background:#444; }
+    </style>
+</head>
+<body>
+<header>GVR_TRAVLP – Weekend Traveller</header>
+
+<div class="container">
+    <h2>Popular Weekend Trips from Hyderabad</h2>
+
+    <div class="trip">
+        <h3>Bhadrachalam + Papikondalu Boating</h3>
+        <p>Beautiful Godavari river boating + Temple visit + Sunrise views.</p>
+        <img src="https://i.imgur.com/zbWc4Lv.jpeg" />
+    </div>
+
+    <div class="trip">
+        <h3>Ananthagiri Hills Trek</h3>
+        <p>Perfect for beginners – Trek, forest views, water streams.</p>
+        <img src="https://i.imgur.com/ccw1Yp6.jpeg" />
+    </div>
+
+    <div class="trip">
+        <h3>Nagarjuna Sagar + Ethipothala Waterfall</h3>
+        <p>Waterfalls + Dam view + Peaceful nature spots.</p>
+        <img src="https://i.imgur.com/nJ6S0Ni.jpeg" />
+    </div>
+
+    <h2>Trip Cost Calculator</h2>
+
+    <div class="calc-box">
+        <label>Distance (km round trip)</label>
+        <input id="distance" type="number" value="600">
+
+        <label>Fuel Efficiency (kmpl)</label>
+        <input id="mileage" type="number" value="10">
+
+        <label>Fuel Price (₹/litre)</label>
+        <input id="fuel_price" type="number" value="110">
+
+        <label>Driver Cost</label>
+        <input id="driver" type="number" value="3000">
+
+        <label>Food Cost per Person</label>
+        <input id="food" type="number" value="700">
+
+        <label>Stay Cost per Person</label>
+        <input id="stay" type="number" value="500">
+
+        <label>Your Profit per Trip</label>
+        <input id="profit" type="number" value="4000">
+
+        <label>No. of Travellers</label>
+        <input id="people" type="number" value="6">
+
+        <button onclick="calc()">Calculate</button>
+
+        <h3 id="result"></h3>
+    </div>
+</div>
+
+<script>
+    function calc() {
+        let d = Number(distance.value);
+        let m = Number(mileage.value);
+        let fp = Number(fuel_price.value);
+        let driver = Number(driver.value);
+        let food = Number(food.value);
+        let stay = Number(stay.value);
+        let profit = Number(profit.value);
+        let people = Number(people.value);
+
+        let litres = d / m;
+        let fuel_cost = litres * fp;
+        let total = fuel_cost + driver + (food * people) + (stay * people) + profit;
+        let per_person = total / people;
+
+        result.innerHTML =
+            "Total Trip Cost: ₹" + total.toFixed(0) +
+            "<br>Per Person: ₹" + per_person.toFixed(0) +
+            "<br><br><small>(Fuel: ₹" + fuel_cost.toFixed(0) + ", Litres: " + litres.toFixed(1) + ")</small>";
+    }
+</script>
+
+</body>
+</html>
