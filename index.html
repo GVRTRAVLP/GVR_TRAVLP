@@ -1,0 +1,381 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>GVR_TRAVLP — Weekend Trips (gvrtra)</title>
+<meta name="description" content="GVR_TRAVLP — Weekend trips from Hyderabad. Book trekking, devotional, waterfalls and combo trips. Search gvrtra to find us." />
+<meta name="keywords" content="gvrtra, GVR_TRAVLP, weekend trips, Hyderabad trips, Papikondalu, Bhadrachalam, Ananthagiri" />
+<meta property="og:title" content="GVR_TRAVLP — Weekend Trips" />
+<meta property="og:description" content="Book weekend trips — trekking, devotional, waterfalls and combo trips. Pay online and register." />
+<meta property="og:image" content="assets/logo.png" />
+<meta name="author" content="Ram (GVR)" />
+<style>
+:root{--accent:#ff7a18;--muted:#666;--bg:#fbf7f0;--card:#fff;--radius:12px}
+*{box-sizing:border-box}
+body{font-family:Inter,system-ui,Arial,sans-serif;margin:0;color:#222;background:var(--bg)}
+.container{max-width:1100px;margin:18px auto;padding:18px}
+.header{display:flex;gap:12px;align-items:center}
+.logo{width:86px;height:86px;border-radius:12px;object-fit:cover}
+h1{margin:0;font-size:22px}
+.sub{color:var(--muted);font-size:14px}
+.layout{display:grid;grid-template-columns:1fr 380px;gap:18px;margin-top:18px}
+.card{background:var(--card);border-radius:var(--radius);padding:14px;box-shadow:0 8px 20px rgba(0,0,0,0.06)}
+.media{height:260px;border-radius:10px;overflow:hidden}
+.gallery{display:flex;gap:8px;margin-top:10px}
+.gallery img{width:100px;height:70px;object-fit:cover;border-radius:8px}
+.groupTitle{font-weight:700;margin:10px 0 8px;font-size:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.tripCard{background:linear-gradient(#fff,#fff);border-radius:10px;padding:10px;min-height:120px;display:flex;flex-direction:column;justify-content:space-between}
+.tripCard img{width:100%;height:140px;object-fit:cover;border-radius:8px}
+.tripInfo{padding:8px 0}
+.price{color:var(--accent);font-weight:700}
+.asideSticky{position:sticky;top:18px}
+input,select,button,textarea{padding:10px;border-radius:8px;border:1px solid #eaeaea;font-size:14px;width:100%}
+button{background:var(--accent);color:#fff;border:none;cursor:pointer}
+.small{font-size:13px;color:var(--muted)}
+.steps{display:flex;gap:6px;margin-bottom:10px}
+.step{flex:1;padding:8px;border-radius:8px;text-align:center;background:#f7f3ef;font-weight:700}
+.step.active{background:var(--accent);color:#fff}
+.hidden{display:none}
+.footer{margin-top:22px;color:var(--muted);text-align:center;padding-bottom:40px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.media{height:200px}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <img src="assets/logo.png" class="logo" alt="GVR_LOGO">
+    <div>
+      <h1>GVR_TRAVLP — Weekend Traveller</h1>
+      <div class="sub">Follow @gvryalla · Search "gvrtra" to find us · Hyderabad trips</div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section>
+      <div class="card">
+        <div class="media">
+          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DO0y0pnEYBv/" data-instgrm-version="14" style="background:#fff;margin:0 auto;max-width:640px;padding:0"></blockquote>
+        </div>
+        <h2 style="margin-top:12px">What you'll see</h2>
+        <p class="small">Trip highlights, visit images and a secured pay & register flow. Choose your weekend (Sat or Sun), enter passenger details, pay and confirm.</p>
+
+        <div style="margin-top:12px" id="tripList">
+          <!-- Groups will render here -->
+        </div>
+      </div>
+    </section>
+
+    <aside>
+      <div class="card asideSticky">
+        <div class="steps">
+          <div class="step active" id="step1Label">1. Select</div>
+          <div class="step" id="step2Label">2. Details</div>
+          <div class="step" id="step3Label">3. Pay</div>
+          <div class="step" id="step4Label">4. Confirm</div>
+        </div>
+
+        <!-- Step 1: select trip -->
+        <div id="step1">
+          <label class="small">Choose trip</label>
+          <select id="selectTrip"></select>
+          <label class="small" style="margin-top:8px">Choose weekend date</label>
+          <select id="selectDate"></select>
+          <div style="margin-top:10px" class="small">Selected price shows at the top of the payment screen.</div>
+          <button style="margin-top:12px" onclick="goToDetails()">Proceed to Details</button>
+        </div>
+
+        <!-- Step 2: passenger details -->
+        <form id="step2" class="hidden" onsubmit="event.preventDefault(); goToPay();">
+          <label class="small">Full name</label>
+          <input id="p_name" required placeholder="Name">
+          <label class="small">Mobile</label>
+          <input id="p_mobile" required pattern='\d{10}' placeholder="9390xxxxxxx">
+          <label class="small">Age</label>
+          <input id="p_age" type="number" min="1" max="120" required placeholder="Age">
+          <label class="small">Gender</label>
+          <select id="p_gender" required>
+            <option value="">Select gender</option>
+            <option>Male</option><option>Female</option><option>Other</option>
+          </select>
+          <label class="small">Email (optional)</label>
+          <input id="p_email" type="email" placeholder="you@example.com">
+          <label class="small">Additional notes</label>
+          <textarea id="p_notes" rows="2" placeholder="Pickup point, medical info..."></textarea>
+
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button type="submit">Proceed to Pay</button>
+            <button type="button" class="ghost" onclick="backToSelect()">Back</button>
+          </div>
+        </form>
+
+        <!-- Step 3: Payment -->
+        <div id="step3" class="hidden">
+          <h4 style="margin:0">Pay & Confirm</h4>
+          <div style="margin-top:8px" class="small">Amount: <span id="payAmount" style="font-weight:700;color:var(--accent)"></span></div>
+          <div style="margin-top:10px;display:flex;gap:10px;align-items:center">
+            <img src="assets/qr.png" class="logo" style="width:140px;height:140px;border-radius:8px" alt="QR">
+            <div>
+              <div style="font-weight:700">UPI ID</div>
+              <div style="color:var(--accent);font-weight:700" id="upiId">27722222@ybl</div>
+              <div class="small">Scan QR or use UPI apps</div>
+              <div style="margin-top:8px;display:flex;gap:6px">
+                <button onclick="copyUPI()" class="ghost">Copy UPI</button>
+                <button onclick="openUpi()">Open UPI App</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:10px" class="small">After paying click <strong>I Have Paid</strong> and enter transaction reference for verification.</div>
+          <label class="small" style="margin-top:8px">Transaction Reference / UPI ID (optional)</label>
+          <input id="txn_ref" placeholder="Txn id / reference">
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button onclick="confirmPaid()">I Have Paid</button>
+            <button class="ghost" onclick="backToDetails()">Back</button>
+          </div>
+        </div>
+
+        <!-- Step 4: Confirmation -->
+        <div id="step4" class="hidden">
+          <h4>Confirmation</h4>
+          <p class="small" id="confMsg">We will send your details to the organizer.</p>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button onclick="finish()">Finish</button>
+            <button class="ghost" onclick="startOver()">Book another</button>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+  </main>
+
+  <footer class="footer">© GVR_TRAVLP — Travel far and feed with love · Follow @gvryalla</footer>
+</div>
+
+<script async src="//www.instagram.com/embed.js"></script>
+<script>
+const ADMIN_EMAIL = "gangavenkataramana@gmail.com";
+const ADMIN_PHONE = "+919390184813";
+const UPI_ID = "27722222@ybl";
+const PAY_LINK = ""; // optional deep link
+const tripsData = {
+  "🟦 TREKKING / NATURE": [
+    {"title":"Ananthagiri Hills","price":993,"img":"assets/places/1.jpg"},
+    {"title":"Bhongir Fort","price":905,"img":"assets/places/2.jpg"},
+    {"title":"Koil Sagar + Koilkonda","price":1250,"img":"assets/places/3.jpg"},
+    {"title":"Pocharam + Nizam Sagar","price":1122,"img":"assets/places/4.jpg"},
+    {"title":"Bogatha Waterfalls","price":1525,"img":"assets/places/5.jpg"}
+  ],
+  "🟦 DEVOTIONAL": [
+    {"title":"Yadadri","price":930,"img":"assets/places/6.jpg"},
+    {"title":"Vemulawada","price":1250,"img":"assets/places/7.jpg"},
+    {"title":"Basara","price":1460,"img":"assets/places/8.jpg"},
+    {"title":"Kondagattu","price":1393,"img":"assets/places/9.jpg"},
+    {"title":"Bhadrachalam","price":1800,"img":"assets/places/10.jpg"}
+  ],
+  "🟦 WATERFALLS / NATURE": [
+    {"title":"Papikondalu","price":1765,"img":"assets/places/11.jpg"},
+    {"title":"Laknavaram","price":1460,"img":"assets/places/12.jpg"},
+    {"title":"Ramappa Temple + Lake","price":1495,"img":"assets/places/1.jpg"},
+    {"title":"Kuntala + Pochera","price":1720,"img":"assets/places/2.jpg"},
+    {"title":"Gayatri Waterfalls","price":1645,"img":"assets/places/3.jpg"}
+  ],
+  "🟦 ANDHRA PRADESH TRIPS": [
+    {"title":"Srisailam","price":1525,"img":"assets/places/4.jpg"},
+    {"title":"Horsley Hills","price":2670,"img":"assets/places/5.jpg"},
+    {"title":"Gandikota","price":2065,"img":"assets/places/6.jpg"},
+    {"title":"Ahobilam","price":1995,"img":"assets/places/7.jpg"}
+  ],
+  "🟦 KARNATAKA TRIPS": [
+    {"title":"Bidar","price":1215,"img":"assets/places/8.jpg"},
+    {"title":"Basavakalyan Fort","price":1460,"img":"assets/places/9.jpg"},
+    {"title":"Hampi","price":2065,"img":"assets/places/10.jpg"}
+  ],
+  "🟦 MAHARASHTRA TRIPS": [
+    {"title":"Nanded (Hazur Sahib)","price":1720,"img":"assets/places/11.jpg"},
+    {"title":"Ajanta & Ellora","price":2600,"img":"assets/places/12.jpg"}
+  ],
+  "🟨 ANDHRA PRADESH EXTRA PLACES": [
+    {"title":"Araku Valley","price":2890,"img":"assets/places/1.jpg"},
+    {"title":"Katiki Waterfalls","price":2960,"img":"assets/places/2.jpg"},
+    {"title":"Borra Caves","price":2960,"img":"assets/places/3.jpg"}
+  ],
+  "⭐ COMBO TRIPS":[
+    {"title":"Combo 1: Bhadrachalam + Papikondalu","price":1900,"img":"assets/places/4.jpg"},
+    {"title":"Combo 2: Laknavaram + Ramappa Temple","price":1600,"img":"assets/places/5.jpg"},
+    {"title":"Combo 3: Ananthagiri Hills + Kotepally","price":1150,"img":"assets/places/6.jpg"},
+    {"title":"Combo 4: Srisailam Full Trip","price":1650,"img":"assets/places/7.jpg"},
+    {"title":"Combo 5: Gandikota + Belum Caves","price":2250,"img":"assets/places/8.jpg"},
+    {"title":"Combo 6: Kuntala + Pochera + Basara","price":1950,"img":"assets/places/9.jpg"},
+    {"title":"Combo 7: Hampi","price":2200,"img":"assets/places/10.jpg"},
+    {"title":"Combo 8: Ahobilam Trek","price":2150,"img":"assets/places/11.jpg"}
+  ]
+};
+
+// Render trip groups
+function renderTrips(){
+  const container = document.getElementById('tripList');
+  for(const [group, arr] of Object.entries(tripsData)){
+    const section = document.createElement('div');
+    section.innerHTML = `<div class="groupTitle">${group}</div>`;
+    const grid = document.createElement('div'); grid.className = 'grid';
+    arr.forEach(item=>{
+      const card = document.createElement('div');
+      card.className = 'tripCard';
+      card.innerHTML = `<div><img src="${item.img}" alt="${item.title}"></div>
+        <div class="tripInfo"><strong>${item.title}</strong><div class="price">₹${item.price}</div></div>
+        <div><button onclick="selectTrip('${item.title.replace(/'/g,'\'')}',${item.price})">Book ₹${item.price}</button></div>`;
+      grid.appendChild(card);
+    });
+    section.appendChild(grid);
+    container.appendChild(section);
+  }
+}
+
+// populate selectTrip dropdown
+function populateSelect(){
+  const sel = document.getElementById('selectTrip');
+  sel.innerHTML = '';
+  for(const arr of Object.values(tripsData)){
+    for(const t of arr){
+      const opt = document.createElement('option');
+      opt.value = `${t.title}||${t.price}`;
+      opt.text = `${t.title} — ₹${t.price}`;
+      sel.appendChild(opt);
+    }
+  }
+}
+
+// weekend dates generator
+function generateWeekends(fromDate, endDate){
+  const arr=[];
+  const d = new Date(fromDate);
+  while(d<=endDate){
+    if(d.getDay()===0 || d.getDay()===6){
+      arr.push(new Date(d));
+    }
+    d.setDate(d.getDate()+1);
+  }
+  return arr;
+}
+function populateDates(){
+  const sel = document.getElementById('selectDate');
+  const today = new Date();
+  const end = new Date('2026-12-31');
+  const weekends = generateWeekends(today, end);
+  weekends.forEach(dt=>{
+    const o = document.createElement('option');
+    o.value = dt.toISOString();
+    o.text = dt.toLocaleDateString(undefined,{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
+    sel.appendChild(o);
+  });
+}
+
+// flow helpers
+function selectTrip(title, price){
+  // set select options and go to details
+  const sel = document.getElementById('selectTrip');
+  for(let i=0;i<sel.options.length;i++){
+    if(sel.options[i].value.startsWith(title + '||')){ sel.selectedIndex = i; break; }
+  }
+  goToDetails();
+}
+function goToDetails(){
+  document.getElementById('step1').classList.add('hidden');
+  document.getElementById('step2').classList.remove('hidden');
+  document.getElementById('step1Label').classList.remove('active');
+  document.getElementById('step2Label').classList.add('active');
+}
+function backToSelect(){
+  document.getElementById('step2').classList.add('hidden');
+  document.getElementById('step1').classList.remove('hidden');
+  document.getElementById('step2Label').classList.remove('active');
+  document.getElementById('step1Label').classList.add('active');
+}
+function goToPay(){
+  // validate details
+  const name = document.getElementById('p_name').value.trim();
+  const mobile = document.getElementById('p_mobile').value.trim();
+  if(!name || !mobile.match(/^\d{10}$/)){ alert('Enter valid name and 10-digit mobile'); return; }
+  document.getElementById('step2').classList.add('hidden');
+  document.getElementById('step3').classList.remove('hidden');
+  document.getElementById('step2Label').classList.remove('active');
+  document.getElementById('step3Label').classList.add('active');
+  // show amount
+  const sel = document.getElementById('selectTrip').value;
+  const price = sel.split('||')[1];
+  document.getElementById('payAmount').textContent = '₹' + price;
+}
+function backToDetails(){
+  document.getElementById('step3').classList.add('hidden');
+  document.getElementById('step2').classList.remove('hidden');
+  document.getElementById('step3Label').classList.remove('active');
+  document.getElementById('step2Label').classList.add('active');
+}
+function copyUPI(){
+  navigator.clipboard && navigator.clipboard.writeText(UPI_ID).then(()=>alert('UPI copied: '+UPI_ID), ()=>{ alert('Copy manually: '+UPI_ID) });
+}
+function openUpi(){
+  if(PAY_LINK){ window.open(PAY_LINK, '_blank'); return; }
+  const uri = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent('GVR_TRAVLP')}&tn=${encodeURIComponent('Trip payment')}`;
+  window.location.href = uri;
+  window.open('assets/qr.png','_blank');
+}
+function confirmPaid(){
+  // gather info and send mailto + whatsapp
+  const sel = document.getElementById('selectTrip').value;
+  const [title, price] = sel.split('||');
+  const date = new Date(document.getElementById('selectDate').value).toLocaleDateString(undefined,{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
+  const name = document.getElementById('p_name').value.trim();
+  const mobile = document.getElementById('p_mobile').value.trim();
+  const age = document.getElementById('p_age').value.trim();
+  const gender = document.getElementById('p_gender').value.trim();
+  const email = document.getElementById('p_email').value.trim();
+  const notes = document.getElementById('p_notes').value.trim();
+  const txn = document.getElementById('txn_ref').value.trim();
+
+  const payload = {
+    trip: title,
+    price: price,
+    date: date,
+    name, mobile, age, gender, email, notes, txn,
+    submittedAt: new Date().toISOString()
+  };
+  // open mail
+  const subject = encodeURIComponent('Trip Registration: ' + title);
+  const body = encodeURIComponent('Registration details:\n' + JSON.stringify(payload, null, 2));
+  window.open('mailto:' + ADMIN_EMAIL + '?subject=' + subject + '&body=' + body, '_blank');
+
+  // open whatsapp
+  const wa = encodeURIComponent('New registration:\n' + JSON.stringify(payload, null, 2));
+  window.open('https://wa.me/' + ADMIN_PHONE.replace(/\D/g,'') + '?text=' + wa, '_blank');
+
+  // show confirmation step
+  document.getElementById('step3').classList.add('hidden');
+  document.getElementById('step4').classList.remove('hidden');
+  document.getElementById('step3Label').classList.remove('active');
+  document.getElementById('step4Label').classList.add('active');
+  document.getElementById('confMsg').textContent = 'Thank you ' + name + '. Your registration has been sent to the organizer. They will contact you on WhatsApp/SMS.';
+}
+function finish(){ alert('Thanks! Organizer will contact you soon.'); startOver(); }
+function startOver(){
+  // reset to step1
+  document.getElementById('step4').classList.add('hidden');
+  document.getElementById('step1').classList.remove('hidden');
+  document.getElementById('step4Label').classList.remove('active');
+  document.getElementById('step1Label').classList.add('active');
+  document.getElementById('p_name').value=''; document.getElementById('p_mobile').value=''; document.getElementById('p_age').value='';
+  document.getElementById('p_gender').value=''; document.getElementById('p_email').value=''; document.getElementById('p_notes').value='';
+  document.getElementById('txn_ref').value='';
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  renderTrips();
+  populateSelect();
+  populateDates();
+});
+</script>
+</body>
+</html>
