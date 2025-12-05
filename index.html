@@ -1,361 +1,625 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>GVR_TRAVLP — Weekend Adventures</title>
-  <meta name="description" content="GVR_TRAVLP — Book trekking, devotional, and nature trips from Hyderabad." />
-
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GVR_TRAVLP — Weekend Trips (gvrtra)</title>
+  <meta name="description" content="GVR_TRAVLP — Weekend trips from Hyderabad. Book trekking, devotional, waterfalls and combo trips. Search gvrtra to find us." />
+  <meta name="author" content="Ram (GVR)" />
   <style>
-    :root {
-      --primary: #d32f2f; /* Abhibus-like Red/Maroon */
-      --accent: #ff7a18;
-      --bg: #f5f5f5;
-      --card: #ffffff;
-      --text: #333;
-      --radius: 8px;
+    :root{
+      --accent:#ff7a18; --muted:#666; --bg:#fbf7f0; --card:#fff;
+      --maxW:1100px; --radius:12px;
     }
-
-    * { box-sizing: border-box; }
-    body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 60px; }
-    
-    /* Header */
-    header { background: var(--card); padding: 15px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; display: flex; align-items: center; gap: 15px; }
-    .logo { height: 50px; width: 50px; border-radius: 50%; object-fit: cover; }
-    h1 { margin: 0; font-size: 20px; color: var(--primary); }
-    .subtitle { font-size: 12px; color: #666; }
-
-    /* Layout */
-    .container { max-width: 1200px; margin: 20px auto; display: grid; grid-template-columns: 1fr 350px; gap: 20px; padding: 0 15px; }
-
-    /* Trip Cards Grid */
-    .category-title { grid-column: 1 / -1; margin-top: 30px; font-size: 18px; font-weight: 700; color: #444; border-left: 4px solid var(--primary); padding-left: 10px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; }
-    
-    .trip-card { background: var(--card); border-radius: var(--radius); overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s; cursor: pointer; border: 1px solid transparent; }
-    .trip-card:hover { transform: translateY(-3px); border-color: var(--primary); }
-    .trip-img { width: 100%; height: 140px; object-fit: cover; }
-    .trip-info { padding: 12px; }
-    .trip-name { font-weight: 600; font-size: 15px; margin: 0 0 5px 0; }
-    .trip-price { color: var(--primary); font-weight: 700; font-size: 16px; }
-
-    /* Booking Sidebar (Sticky) */
-    aside { align-self: start; position: sticky; top: 90px; }
-    
-    .booking-box { background: var(--card); border-radius: var(--radius); padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-    .box-header { font-size: 18px; font-weight: 700; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
-
-    /* Form Elements */
-    label { display: block; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 5px; margin-top: 12px; }
-    input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
-    input:focus, select:focus { border-color: var(--primary); outline: none; }
-    
-    .row { display: flex; gap: 10px; }
-    .col { flex: 1; }
-
-    .btn-primary { width: 100%; background: var(--primary); color: white; padding: 12px; border: none; border-radius: 4px; font-weight: 600; font-size: 16px; margin-top: 20px; cursor: pointer; transition: background 0.2s; }
-    .btn-primary:hover { background: #b71c1c; }
-
-    /* Payment UI (Abhibus Style) */
-    .payment-summary { background: #fff5f5; padding: 15px; border-radius: 4px; border: 1px solid #ffcdd2; margin-bottom: 15px; }
-    .total-label { font-size: 14px; color: #555; }
-    .total-amount { font-size: 24px; font-weight: 700; color: var(--primary); }
-
-    .payment-method { margin-top: 15px; }
-    .upi-row { display: flex; gap: 10px; margin-bottom: 15px; }
-    .upi-app { flex: 1; border: 1px solid #ddd; border-radius: 6px; padding: 8px; text-align: center; cursor: pointer; background: #fff; font-size: 13px; font-weight: 600; }
-    .upi-app:hover { background: #f9f9f9; border-color: #aaa; }
-
-    .qr-container { text-align: center; margin-top: 10px; padding: 10px; background: #f9f9f9; border-radius: 8px; }
-    .qr-img { width: 150px; height: 150px; mix-blend-mode: multiply; }
-    .upi-id-text { font-family: monospace; background: #eee; padding: 4px 8px; border-radius: 4px; display: inline-block; margin-top: 5px; font-size: 14px; }
-
-    .success-msg { text-align: center; color: green; font-weight: 600; display: none; padding: 10px; }
-
-    /* Mobile Responsive */
-    @media (max-width: 800px) {
-      .container { grid-template-columns: 1fr; }
-      aside { position: relative; top: 0; order: -1; margin-bottom: 20px; }
+    *{box-sizing:border-box}
+    body{font-family:Inter, system-ui, Arial, sans-serif; margin:0; color:#222; background:var(--bg)}
+    .wrap{max-width:var(--maxW); margin:20px auto; padding:18px}
+    header{display:flex; gap:14px; align-items:center}
+    .logo{width:86px; height:86px; border-radius:14px; object-fit:contain; background:#fff; padding:8px}
+    h1{margin:0;font-size:22px}
+    .sub{color:var(--muted);font-size:14px}
+    .hero{display:grid; grid-template-columns:1fr 380px; gap:18px; margin-top:18px}
+    .card{background:var(--card); border-radius:var(--radius); padding:14px; box-shadow:0 6px 20px rgba(0,0,0,0.06)}
+    .media{border-radius:10px; overflow:hidden; height:300px; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg,#eef2f6,#fff)}
+    .gallery{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap}
+    .gallery .thumb{width:120px; height:80px; object-fit:cover; border-radius:8px; cursor:pointer; border:2px solid transparent}
+    .gallery .thumb.active{border-color:var(--accent)}
+    .trips{margin-top:14px}
+    .groupTitle{font-weight:700; margin:10px 0 8px; font-size:16px}
+    .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px}
+    .tripCard{background:linear-gradient(#fff,#fff); border-radius:10px; padding:12px; min-height:120px; display:flex; flex-direction:column; justify-content:space-between}
+    .tripCard h4{margin:6px 0 0;font-size:16px}
+    .price{color:var(--accent); font-weight:700; margin-top:8px; font-size:18px}
+    aside .card{position:sticky; top:18px}
+    form{display:flex; flex-direction:column; gap:8px}
+    input, select, button, textarea{padding:10px; border-radius:8px; border:1px solid #eaeaea; font-size:14px}
+    button{background:var(--accent); color:#fff; border:none; cursor:pointer}
+    .muted{color:var(--muted); font-size:13px}
+    .payBox{display:flex; gap:10px; align-items:center}
+    .qr{width:130px; height:130px; object-fit:contain; border-radius:8px; background:#fff; padding:6px; box-shadow:0 6px 18px rgba(0,0,0,0.08)}
+    .small{font-size:13px}
+    .actions{display:flex; gap:8px; margin-top:8px; flex-wrap:wrap}
+    .ghost{background:#fff;color:var(--accent);border:1px solid #eee}
+    footer{margin-top:22px; color:var(--muted); text-align:center; padding-bottom:40px}
+    .flex{display:flex; gap:10px; align-items:center}
+    .uploader{border:2px dashed #e9e9e9; padding:8px; border-radius:8px; background: #fff; cursor:pointer; display:inline-block}
+    .modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.45); z-index:2000}
+    .modal .card{width:420px; max-width:94%; padding:18px}
+    .modal.open{display:flex}
+    .trip-actions{display:flex; gap:8px; margin-top:10px}
+    .pill{padding:6px 10px;border-radius:999px;background:#f7f7f7;border:1px solid #eee;font-size:13px}
+    @media(max-width:900px){
+      .hero{grid-template-columns:1fr}
+      .media{height:240px}
+      .qr{width:100px;height:100px}
     }
+    /* simple responsive table for copyable list */
+    .list-table{width:100%; border-collapse:collapse}
+    .list-table td{padding:8px; border-bottom:1px dashed #eee; vertical-align:middle}
   </style>
 </head>
 <body>
+  <div class="wrap">
+    <header>
+      <img src="" alt="GVR_TRAVLP" class="logo" id="siteLogo">
+      <div>
+        <h1>GVR_TRAVLP — Weekend Traveller</h1>
+        <div class="sub">Follow @gvryalla · Search "gvrtra" to find us · Hyderabad trips & weekend adventures</div>
+      </div>
+    </header>
 
-<header>
-  <img src="images/logo.png" alt="GVR" class="logo" onerror="this.src='https://via.placeholder.com/50?text=GVR'">
-  <div>
-    <h1>GVR_TRAVLP</h1>
-    <div class="subtitle">Weekend Trips · Trekking · Devotional</div>
+    <section class="hero">
+      <!-- LEFT: media + trips -->
+      <div>
+        <div class="card">
+          <div class="media" id="mainMedia">
+            <div style="text-align:center; color:var(--muted)">
+              <div style="font-weight:700; margin-bottom:8px">Place previews</div>
+              <div class="muted">Upload Images.pdf (or click thumbnails below) to populate gallery</div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center">
+            <div style="display:flex; gap:8px; align-items:center">
+              <label class="uploader" id="pdfUploaderLabel">
+                Upload Images PDF
+                <input type="file" id="pdfUploader" accept="application/pdf" style="display:none">
+              </label>
+              <label class="uploader" id="logoUploaderLabel">
+                Upload Logo (PNG/JPG)
+                <input type="file" id="logoUploader" accept="image/*" style="display:none">
+              </label>
+              <label class="uploader" id="qrUploaderLabel">
+                Upload QR (PNG/JPG)
+                <input type="file" id="qrUploader" accept="image/*" style="display:none">
+              </label>
+            </div>
+
+            <div class="muted small">Tip: PDF + logo + qr will be saved in browser session (local only)</div>
+          </div>
+
+          <div class="gallery" id="placesGallery" style="margin-top:10px"></div>
+        </div>
+
+        <div class="trips">
+          <div class="card" style="margin-top:12px">
+            <div class="groupTitle">🟦 TREKKING / NATURE</div>
+            <div class="grid" id="trekkingGrid"></div>
+
+            <div class="groupTitle" style="margin-top:14px">🟦 DEVOTIONAL</div>
+            <div class="grid" id="devotionalGrid"></div>
+
+            <div class="groupTitle" style="margin-top:14px">🟦 WATERFALLS / NATURE</div>
+            <div class="grid" id="waterfallsGrid"></div>
+
+            <div class="groupTitle" style="margin-top:14px">⭐ COMBO TRIPS</div>
+            <div class="grid" id="comboGrid"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: registration & payment -->
+      <aside>
+        <div class="card">
+          <h3>Register & Pay</h3>
+          <p class="muted">Select trip, date and click Pay. We'll open your UPI app (mobile) or show QR for scanning.</p>
+
+          <label class="small">Select Trip</label>
+          <select id="tripSelect"></select>
+
+          <label class="small">Select Weekend Date</label>
+          <select id="dateSelect"></select>
+
+          <div style="margin-top:10px" class="card">
+            <div class="payBox" style="align-items:flex-start">
+              <img src="" alt="QR" class="qr" id="qrImg" onerror="this.style.display='none'">
+              <div style="flex:1">
+                <div style="font-weight:700">UPI ID</div>
+                <div style="font-size:18px; color:var(--accent); font-weight:700" id="upiText">27722222@ybl</div>
+                <div class="small muted">Tap to copy or use "Open UPI app" below</div>
+
+                <div class="actions">
+                  <button type="button" onclick="copyUPI()" class="ghost">Copy UPI ID</button>
+                  <button type="button" onclick="openPayLink()" class="ghost">Open UPI App</button>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:10px" class="muted small">
+              After you pay, click <strong>I have paid</strong> and submit the registration (we will open mail & whatsapp for organizer notification).
+            </div>
+
+            <div class="actions" style="margin-top:10px">
+              <button id="paidBtn" type="button" onclick="onPaidClicked()">I have paid</button>
+              <button type="button" class="ghost" onclick="showInstructions()">Payment help</button>
+            </div>
+          </div>
+
+          <form id="registerForm" style="display:none; margin-top:12px">
+            <label class="small">Full name</label>
+            <input type="text" id="name" required placeholder="Your name">
+
+            <label class="small">Mobile (10 digits)</label>
+            <input type="tel" id="mobile" placeholder="9390xxxxxxx" pattern="[0-9]{10}" required>
+
+            <label class="small">Transaction ID (optional)</label>
+            <input type="text" id="txn" placeholder="UPI transaction id / reference">
+
+            <label class="small">Notes (optional)</label>
+            <textarea id="notes" rows="2" placeholder="Any notes (e.g. pickup point)"></textarea>
+
+            <button type="submit">Confirm & Notify (Send)</button>
+
+            <p id="formMsg" class="muted small" style="margin-top:8px"></p>
+          </form>
+
+          <hr style="margin-top:12px">
+
+          <p class="muted small">Contact organizer directly:</p>
+          <p style="margin:6px 0"><a id="waLink" href="#" target="_blank">Message on WhatsApp</a></p>
+          <p style="margin:6px 0"><a id="smsLink" href="#" target="_blank">Send SMS</a></p>
+
+          <div style="margin-top:8px" class="muted small">Email: <a href="mailto:gangavenkataramana@gmail.com">gangavenkataramana@gmail.com</a></div>
+        </div>
+      </aside>
+    </section>
+
+    <footer class="muted">© GVR_TRAVLP — Travel far and feed with love · Follow @gvryalla</footer>
   </div>
-</header>
 
-<div class="container">
+  <!-- pdf.js from CDN -->
+  <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
 
-  <main id="placesContainer">
-    </main>
+  <script>
+    /********* CONFIG *********/
+    const ADMIN_EMAIL = 'gangavenkataramana@gmail.com';
+    const ADMIN_PHONE = '+919390184813'; // whatsapp +91 9390184813
+    const UPI_ID = '27722222@ybl';      // <<-- provided UPI ID
+    const DEFAULT_WA_MESSAGE = 'Hi GVR, I want to know about upcoming trips.';
+    const SITE_SEARCH_KEYWORDS = ['gvrtra','GVR_TRAVLP','gvryalla'];
 
-  <aside>
-    <div class="booking-box" id="bookingBox">
-      
-      <div id="step1">
-        <div class="box-header">Book Your Trip</div>
-        
-        <label>Select Destination</label>
-        <select id="tripSelect" onchange="updatePrice()"></select>
+    /********* TRIPS DATA *********/
+    const trips = {
+      trekking: [
+        {title: 'Ananthagiri Hills', price: '₹993'},
+        {title: 'Bhongir Fort', price: '₹905'},
+        {title: 'Koil Sagar + Koilkonda', price: '₹1,250'},
+        {title: 'Pocharam + Nizam Sagar', price: '₹1,122'},
+        {title: 'Bogatha Waterfalls', price: '₹1,525'}
+      ],
+      devotional: [
+        {title: 'Yadadri', price: '₹930'},
+        {title: 'Vemulawada', price: '₹1,250'},
+        {title: 'Basara', price: '₹1,460'},
+        {title: 'Kondagattu', price: '₹1,393'},
+        {title: 'Bhadrachalam', price: '₹1,800'}
+      ],
+      waterfalls: [
+        {title: 'Papikondalu', price: '₹1,765'},
+        {title: 'Laknavaram', price: '₹1,460'},
+        {title: 'Ramappa Temple + Lake', price: '₹1,495'},
+        {title: 'Kuntala + Pochera', price: '₹1,720'},
+        {title: 'Gayatri Waterfalls', price: '₹1,645'}
+      ],
+      combo: [
+        {title: 'Bhadrachalam + Papikondalu', price: '₹1,900'},
+        {title: 'Laknavaram + Ramappa Temple', price: '₹1,600'},
+        {title: 'Ananthagiri Hills + Kotepally', price: '₹1,150'},
+        {title: 'Srisailam Full Trip', price: '₹1,650'}
+      ]
+    };
 
-        <label>Travel Date (Weekend)</label>
-        <select id="dateSelect"></select>
+    /********* SIMPLE HELPERS *********/
+    function el(id){ return document.getElementById(id); }
+    function q(sel, root=document){ return root.querySelector(sel); }
 
-        <label>Full Name</label>
-        <input type="text" id="name" placeholder="Enter your name">
+    /********* Load defaults (logo + QR) from uploaded dev container or fallback blank */ 
+    const siteLogoEl = el('siteLogo');
+    const qrImgEl = el('qrImg');
+    // If you have uploaded logo/qr files to the same folder on hosting, set relative paths here.
+    // If you want to use the uploaded files you provided via the chat (Images.pdf, qr.png), you can
+    // replace these src with 'assets/logo.png'/'assets/qr.png' after uploading to your hosting.
+    // For local preview, we'll try to read from browser localStorage (set later when user uploads).
+    function restoreSavedImages(){
+      const logoData = localStorage.getItem('gvr_logo');
+      const qrData = localStorage.getItem('gvr_qr');
+      if(logoData){ siteLogoEl.src = logoData; } else { siteLogoEl.src = ''; siteLogoEl.style.background='linear-gradient(45deg,#fff,#f6f6f6)'; siteLogoEl.alt='GVR_TRAVLP'; }
+      if(qrData){ qrImgEl.src = qrData; qrImgEl.style.display='block'; } else { qrImgEl.src=''; qrImgEl.style.display='none'; }
+    }
+    restoreSavedImages();
 
-        <label>Mobile Number</label>
-        <input type="tel" id="mobile" placeholder="10-digit number" maxlength="10">
-
-        <div class="row">
-          <div class="col">
-            <label>Age</label>
-            <input type="number" id="age" placeholder="25">
-          </div>
-          <div class="col">
-            <label>Gender</label>
-            <select id="gender">
-              <option value="">Select</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
+    /********* Render trips UI *********/
+    function createTripCard(t){
+      const div = document.createElement('div'); div.className='tripCard';
+      div.innerHTML = `
+        <div>
+          <h4>${escapeHtml(t.title)}</h4>
+          <div class="price">${escapeHtml(t.price)}</div>
         </div>
-
-        <button class="btn-primary" onclick="goToPayment()">Proceed to Pay</button>
-      </div>
-
-      <div id="step2" style="display: none;">
-        <div class="box-header">Payment</div>
-        
-        <div class="payment-summary">
-          <div class="total-label">Total Amount to Pay</div>
-          <div class="total-amount" id="payAmount">₹0</div>
-        </div>
-
-        <div class="payment-method">
-          <label style="margin-top:0">Pay via UPI App</label>
-          <div class="upi-row">
-            <div class="upi-app" onclick="openUpi('gpay')">Google Pay</div>
-            <div class="upi-app" onclick="openUpi('phonepe')">PhonePe</div>
-            <div class="upi-app" onclick="openUpi('paytm')">Paytm</div>
+        <div>
+          <div class="trip-actions">
+            <button class="ghost" type="button" onclick="viewPlace('${escapeJs(t.title)}')">View</button>
+            <button type="button" onclick="startPay('${escapeJs(t.title)}','${escapeJs(t.price)}')">Pay & Book</button>
           </div>
-
-          <label>Or Scan QR Code</label>
-          <div class="qr-container">
-            <img src="images/qr.png" alt="Scan QR" class="qr-img" onerror="this.src='https://via.placeholder.com/150?text=QR+Code'">
-            <br>
-            <div class="upi-id-text" onclick="copyUpi()">27722222@ybl <span style="font-size:10px; cursor:pointer">📋</span></div>
-          </div>
-        </div>
-
-        <button class="btn-primary" onclick="confirmPayment()">I Have Paid - Confirm Booking</button>
-        <div style="text-align:center; margin-top:10px; font-size:13px; color:#666; cursor:pointer" onclick="goBack()">← Back to Details</div>
-      </div>
-
-    </div>
-  </aside>
-
-</div>
-
-<script>
-  // --- CONFIGURATION ---
-  const UPI_ID = "27722222@ybl";
-  const ADMIN_PHONE = "9390184813"; // Without +91 for link generation usually
-
-  // --- DATA: TRIPS & IMAGES ---
-  // Ensure image filenames match exactly what you saved in 'images' folder
-  const tripsData = [
-    { cat: '📍 Short Getaways', items: [
-      { name: 'Ananthagiri Hills', price: 993, img: 'images/ananthagiri.jpg' },
-      { name: 'Bhongir Fort', price: 905, img: 'images/bhongir.jpg' },
-      { name: 'Koil Sagar + Koilkonda', price: 1250, img: 'images/koil-sagar.jpg' },
-      { name: 'Pocharam + Nizam Sagar', price: 1122, img: 'images/pocharam.jpg' },
-      { name: 'Bogatha Waterfalls', price: 1525, img: 'images/bogatha.jpg' }
-    ]},
-    { cat: '🟦 Devotional', items: [
-      { name: 'Yadadri', price: 930, img: 'images/yadadri.jpg' },
-      { name: 'Vemulawada', price: 1250, img: 'images/vemulawada.jpg' },
-      { name: 'Basara', price: 1460, img: 'images/basara.jpg' },
-      { name: 'Kondagattu', price: 1393, img: 'images/kondagattu.jpg' },
-      { name: 'Bhadrachalam', price: 1800, img: 'images/bhadrachalam.jpg' }
-    ]},
-    { cat: '🟦 Waterfalls / Nature', items: [
-      { name: 'Papikondalu', price: 1765, img: 'images/papikondalu.jpg' },
-      { name: 'Laknavaram', price: 1460, img: 'images/laknavaram.jpg' },
-      { name: 'Ramappa Temple', price: 1495, img: 'images/ramappa.jpg' },
-      { name: 'Kuntala + Pochera', price: 1720, img: 'images/kuntala.jpg' },
-      { name: 'Gayatri Waterfalls', price: 1645, img: 'images/gayatri.jpg' }
-    ]},
-    { cat: '🟦 Andhra Pradesh Trips', items: [
-      { name: 'Srisailam', price: 1525, img: 'images/srisailam.jpg' },
-      { name: 'Horsley Hills', price: 2670, img: 'images/horsley.jpg' },
-      { name: 'Gandikota', price: 2065, img: 'images/gandikota.jpg' },
-      { name: 'Ahobilam', price: 1995, img: 'images/ahobilam.jpg' }
-    ]},
-    { cat: '🟦 Karnataka Trips', items: [
-      { name: 'Bidar', price: 1215, img: 'images/bidar.jpg' },
-      { name: 'Basavakalyan Fort', price: 1460, img: 'images/basavakalyan.jpg' },
-      { name: 'Hampi', price: 2065, img: 'images/hampi.jpg' }
-    ]},
-    { cat: '🟦 Maharashtra Trips', items: [
-      { name: 'Nanded (Hazur Sahib)', price: 1720, img: 'images/nanded.jpg' },
-      { name: 'Ajanta & Ellora', price: 2600, img: 'images/ajanta.jpg' }
-    ]},
-    { cat: '🟨 Extra Places', items: [
-      { name: 'Araku Valley', price: 2890, img: 'images/araku.jpg' },
-      { name: 'Katiki Waterfalls', price: 2960, img: 'images/katiki.jpg' },
-      { name: 'Borra Caves', price: 2960, img: 'images/borra.jpg' }
-    ]}
-  ];
-
-  // --- RENDER UI ---
-  const container = document.getElementById('placesContainer');
-  const tripSelect = document.getElementById('tripSelect');
-
-  tripsData.forEach(category => {
-    // Add Category Title
-    const title = document.createElement('div');
-    title.className = 'category-title';
-    title.textContent = category.cat;
-    container.appendChild(title);
-
-    // Create Grid for this category
-    const grid = document.createElement('div');
-    grid.className = 'grid';
-
-    category.items.forEach(trip => {
-      // Add to main grid
-      const card = document.createElement('div');
-      card.className = 'trip-card';
-      // Error handling: if image missing, show grey box
-      card.innerHTML = `
-        <img src="${trip.img}" class="trip-img" onerror="this.src='https://via.placeholder.com/300x200?text=${encodeURIComponent(trip.name)}'">
-        <div class="trip-info">
-          <h4 class="trip-name">${trip.name}</h4>
-          <div class="trip-price">₹${trip.price.toLocaleString('en-IN')}</div>
         </div>
       `;
-      // Click card to select in dropdown
-      card.onclick = () => {
-        tripSelect.value = JSON.stringify({name: trip.name, price: trip.price});
-        updatePrice();
-        document.getElementById('bookingBox').scrollIntoView({behavior: "smooth"});
-      };
-      grid.appendChild(card);
+      return div;
+    }
+    function renderAllTrips(){
+      ['trekking','devotional','waterfalls','combo'].forEach(k=>{
+        const id = k+'Grid';
+        const cont = el(id);
+        if(!cont) return;
+        cont.innerHTML='';
+        trips[k].forEach(t => cont.appendChild(createTripCard(t)));
+      });
+      // populate select
+      const tripSelect = el('tripSelect');
+      tripSelect.innerHTML = '';
+      Object.values(trips).flat().forEach(t => {
+        const o = document.createElement('option'); o.value = `${t.title} — ${t.price}`; o.textContent = `${t.title} — ${t.price}`;
+        tripSelect.appendChild(o);
+      });
+    }
+    renderAllTrips();
 
-      // Add to Dropdown options
+    /********* Date generation for weekends (Sat & Sun) *********/
+    function generateWeekendDates(start, end){
+      const arr = [];
+      const d = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+      while(d <= end){
+        const day = d.getDay();
+        if(day === 0 || day === 6){
+          arr.push(new Date(d.getTime()));
+        }
+        d.setDate(d.getDate() + 1);
+      }
+      return arr;
+    }
+    const today = new Date();
+    const endDate = new Date('2026-12-31T23:59:59');
+    const weekends = generateWeekendDates(today, endDate);
+    const dateSelect = el('dateSelect');
+    weekends.forEach(dt=>{
       const opt = document.createElement('option');
-      opt.value = JSON.stringify({name: trip.name, price: trip.price});
-      opt.textContent = `${trip.name} - ₹${trip.price}`;
-      tripSelect.appendChild(opt);
+      const dd = dt.toLocaleDateString(undefined, {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
+      opt.value = dt.toISOString(); opt.textContent = dd;
+      dateSelect.appendChild(opt);
     });
 
-    container.appendChild(grid);
-  });
-
-  // --- DATE GENERATOR (Next 8 Weekends) ---
-  const dateSelect = document.getElementById('dateSelect');
-  const today = new Date();
-  for(let i=0; i<60; i++) {
-    const d = new Date();
-    d.setDate(today.getDate() + i);
-    if(d.getDay() === 6 || d.getDay() === 0) { // Saturday or Sunday
-      const opt = document.createElement('option');
-      const dateStr = d.toLocaleDateString('en-IN', {weekday:'short', day:'numeric', month:'short'});
-      opt.value = dateStr;
-      opt.textContent = dateStr;
-      dateSelect.appendChild(opt);
+    /********* UPI / Payment functions *********/
+    function copyUPI(){
+      if(navigator.clipboard){
+        navigator.clipboard.writeText(UPI_ID).then(()=> alert('UPI ID copied: ' + UPI_ID), ()=> fallbackCopy(UPI_ID));
+      } else fallbackCopy(UPI_ID);
     }
-  }
-
-  // --- BOOKING LOGIC ---
-  let selectedTrip = {};
-
-  function updatePrice() {
-    if(tripSelect.value) {
-      selectedTrip = JSON.parse(tripSelect.value);
+    function fallbackCopy(text){
+      const ta = document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select();
+      try{ document.execCommand('copy'); alert('UPI ID copied: ' + text); }catch(e){ alert('Copy failed — please copy manually: ' + text); }
+      ta.remove();
     }
-  }
-  // Initialize
-  if(tripSelect.options.length > 0) updatePrice();
-
-  function goToPayment() {
-    // Validation
-    const name = document.getElementById('name').value;
-    const mobile = document.getElementById('mobile').value;
-    const age = document.getElementById('age').value;
-    const gender = document.getElementById('gender').value;
-
-    if(!name || mobile.length !== 10 || !age || !gender) {
-      alert("Please fill all details correctly.");
-      return;
+    function openPayLink(customAmount){
+      // Try to open UPI deep link for mobile; if desktop, open QR image in new tab for scanning
+      const amountParam = customAmount ? `&am=${encodeURIComponent(customAmount)}` : '';
+      const upiUri = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent('GVR_TRAVLP')}&tn=${encodeURIComponent('Trip payment')}${amountParam}`;
+      // try to open
+      window.location.href = upiUri;
+      // and also open the QR image in a new tab
+      const qr = localStorage.getItem('gvr_qr') || qrImgEl.src || '';
+      if(qr) window.open(qr, '_blank');
     }
 
-    // Update Payment Screen
-    document.getElementById('payAmount').textContent = '₹' + selectedTrip.price.toLocaleString('en-IN');
-    
-    // Switch View
-    document.getElementById('step1').style.display = 'none';
-    document.getElementById('step2').style.display = 'block';
-  }
+    function showInstructions(){
+      alert('Use any UPI app to scan the QR or copy the UPI ID. After payment click "I have paid" and complete registration.');
+    }
 
-  function goBack() {
-    document.getElementById('step2').style.display = 'none';
-    document.getElementById('step1').style.display = 'block';
-  }
+    /********* Booking UI + Modal behavior *********/
+    const modal = document.createElement('div'); modal.className='modal'; modal.innerHTML = `
+      <div class="card">
+        <h3 id="modalTitle">Pay & Book</h3>
+        <div id="modalBody"></div>
+        <div style="margin-top:12px; text-align:right">
+          <button class="ghost" id="modalClose">Close</button>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+    modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
+    el('modalClose') && el('modalClose').addEventListener('click', closeModal); // in case element exists early
 
-  // --- PAYMENT LOGIC ---
-  function copyUpi() {
-    navigator.clipboard.writeText(UPI_ID);
-    alert("UPI ID Copied: " + UPI_ID);
-  }
+    function openModal(title, innerHtml){
+      modal.classList.add('open');
+      q('#modalTitle', modal).textContent = title;
+      q('#modalBody', modal).innerHTML = innerHtml;
+      // bind close
+      q('#modalClose', modal).onclick = closeModal;
+      // bind copy upi inside modal if present
+      const copyBtn = q('#modalBody .copy-upi', modal);
+      if(copyBtn) copyBtn.onclick = copyUPI;
+      const openBtn = q('#modalBody .open-upi', modal);
+      if(openBtn) openBtn.onclick = () => openPayLink();
+      // if pay-with-amount button present
+      const payAmtBtn = q('#modalBody .pay-amount');
+      if(payAmtBtn) payAmtBtn.onclick = () => {
+        const amt = q('#modalBody input[name="amount"]').value || '';
+        openPayLink(amt);
+      };
+    }
+    function closeModal(){ modal.classList.remove('open'); }
 
-  function openUpi(app) {
-    // This tries to open specific apps via Intent
-    // Note: This works best on Android Mobile
-    const amount = selectedTrip.price;
-    const note = "Trip Booking";
-    const name = "GVR Travels";
-    let url = `upi://pay?pa=${UPI_ID}&pn=${name}&am=${amount}&tn=${note}`;
-    
-    // In a real app, you might try specific scheme prefixes, but standard upi:// is safest fallback
-    window.location.href = url;
-  }
+    function startPay(title, price){
+      const numeric = price.replace(/[^\d.]/g,'');
+      const inner = `
+        <div style="display:flex; gap:12px; align-items:center">
+          <img src="${qrImgEl.src || ''}" class="qr" alt="QR" onerror="this.style.display='none'">
+          <div style="flex:1">
+            <div style="font-weight:700">${escapeHtml(title)}</div>
+            <div style="margin-top:6px">Amount: <span style="color:var(--accent); font-weight:700">${escapeHtml(price)}</span></div>
+            <div style="margin-top:8px" class="muted">Tap "Open UPI app" to attempt direct payment on mobile; or scan QR shown.</div>
+            <div style="margin-top:8px" class="trip-actions">
+              <button class="ghost copy-upi" type="button">Copy UPI</button>
+              <button class="ghost open-upi" type="button">Open UPI app</button>
+            </div>
+            <div style="margin-top:8px">Or change amount and pay:</div>
+            <div style="display:flex; gap:8px; margin-top:6px">
+              <input name="amount" type="number" step="1" placeholder="${numeric || ''}" style="flex:1; padding:8px; border-radius:8px; border:1px solid #eee"/>
+              <button class="pay-amount" type="button">Pay</button>
+            </div>
+          </div>
+        </div>
+      `;
+      openModal('Pay & Book — ' + title, inner);
+    }
 
-  function confirmPayment() {
-    // Gather all data
-    const name = document.getElementById('name').value;
-    const mobile = document.getElementById('mobile').value;
-    const age = document.getElementById('age').value;
-    const gender = document.getElementById('gender').value;
-    const date = document.getElementById('dateSelect').value;
-    const tripName = selectedTrip.name;
-    const amount = selectedTrip.price;
+    function viewPlace(title){
+      // show a simple info modal with thumbnails (match by name) - here we show list of images in gallery
+      let body = '<div style="max-height:400px; overflow:auto">';
+      const thumbs = document.querySelectorAll('#placesGallery img');
+      if(thumbs.length === 0) body += '<div class="muted">No images loaded. Please upload Images.pdf.</div>';
+      else{
+        body += '<div style="display:flex; gap:8px; flex-wrap:wrap">';
+        thumbs.forEach(img => { body += `<img src="${img.src}" style="width:160px;height:100px;object-fit:cover;border-radius:8px;margin:6px">`; });
+        body += '</div>';
+      }
+      body += '</div>';
+      openModal(title, body);
+    }
 
-    // Create WhatsApp Message
-    const msg = `*New Trip Booking!* 🚍%0A%0A` +
-                `*Name:* ${name}%0A` +
-                `*Age/Gender:* ${age} / ${gender}%0A` +
-                `*Mobile:* ${mobile}%0A` +
-                `*Trip:* ${tripName}%0A` +
-                `*Date:* ${date}%0A` +
-                `*Amount Paid:* ₹${amount}%0A%0A` +
-                `I have completed the payment via UPI/QR. Please confirm my seat.`;
+    /********* Register form logic (mailto + whatsapp) *********/
+    el('paidBtn').addEventListener('click', onPaidClicked);
+    function onPaidClicked(){
+      el('registerForm').style.display = 'flex';
+      el('registerForm').scrollIntoView({behavior:'smooth'});
+    }
+    // Set wa and sms links
+    el('waLink').href = `https://wa.me/${ADMIN_PHONE.replace(/\D/g,'')}?text=${encodeURIComponent(DEFAULT_WA_MESSAGE)}`;
+    el('smsLink').href = `sms:${ADMIN_PHONE.replace(/\D/g,'')}&body=${encodeURIComponent(DEFAULT_WA_MESSAGE)}`;
+    // form submit
+    el('registerForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const name = el('name').value.trim();
+      const mobile = el('mobile').value.trim();
+      const notes = el('notes').value.trim();
+      const txn = el('txn').value.trim();
+      const trip = el('tripSelect').value;
+      const dateIso = el('dateSelect').value;
+      const dateReadable = new Date(dateIso).toLocaleDateString(undefined, {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
 
-    // Open WhatsApp
-    const waUrl = `https://wa.me/91${ADMIN_PHONE}?text=${msg}`;
-    window.open(waUrl, '_blank');
-    
-    alert("Redirecting to WhatsApp to send booking details...");
-  }
-</script>
+      if(!name || !/^\d{10}$/.test(mobile)){
+        alert('Please enter your name and a valid 10-digit mobile number.');
+        return;
+      }
 
+      const regObj = { name, mobile, trip, date: dateReadable, txn, notes, submittedAt: new Date().toISOString() };
+
+      // 1) open mail client to send registration to admin (mailto)
+      const subject = encodeURIComponent('New Trip Registration — ' + trip);
+      const body = encodeURIComponent('Registration details:\n' + JSON.stringify(regObj, null, 2));
+      const mailto = `mailto:${ADMIN_EMAIL}?subject=${subject}&body=${body}`;
+      window.open(mailto, '_blank');
+
+      // 2) open WhatsApp to notify admin
+      const waMsg = encodeURIComponent(`New registration:\nName: ${name}\nMobile: ${mobile}\nTrip: ${trip}\nDate: ${dateReadable}\nTxn: ${txn || '—'}\nNotes: ${notes || '—'}`);
+      const waUrl = `https://wa.me/${ADMIN_PHONE.replace(/\D/g,'')}?text=${waMsg}`;
+      window.open(waUrl, '_blank');
+
+      const msgEl = el('formMsg');
+      msgEl.textContent = 'Registration submitted. We opened your mail app and WhatsApp to notify the organizer. If nothing opened, please email to ' + ADMIN_EMAIL + ' or message ' + ADMIN_PHONE;
+      el('registerForm').reset();
+      setTimeout(()=>{ el('registerForm').style.display='none'; }, 2500);
+    });
+
+    /********* PDF upload & image extraction (uses pdf.js) *********/
+    const pdfUploader = el('pdfUploader');
+    const placesGallery = el('placesGallery');
+    const pdfUploaderLabel = el('pdfUploaderLabel');
+    // allow clicking label to open file input
+    pdfUploaderLabel.addEventListener('click', ()=> pdfUploader.click());
+
+    // image compression helper (canvas)
+    function compressImage(img, maxW=1200, quality=0.75){
+      return new Promise((resolve)=>{
+        const canvas = document.createElement('canvas');
+        let w = img.naturalWidth, h = img.naturalHeight;
+        if(w > maxW){
+          const ratio = maxW / w;
+          w = Math.round(w * ratio);
+          h = Math.round(h * ratio);
+        }
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        canvas.toBlob(blob => {
+          const url = URL.createObjectURL(blob);
+          // create dataURL (base64) - optional, but handy to persist to localStorage
+          const reader = new FileReader();
+          reader.onload = ()=> resolve(reader.result);
+          reader.readAsDataURL(blob);
+        }, 'image/jpeg', quality);
+      });
+    }
+
+    async function handlePdfFile(file){
+      // Clear gallery
+      placesGallery.innerHTML = `<div class="muted">Processing PDF... this may take a few seconds</div>`;
+      const arrayBuffer = await file.arrayBuffer();
+      const loadingTask = pdfjsLib.getDocument({data: arrayBuffer});
+      const pdf = await loadingTask.promise;
+      const total = pdf.numPages;
+      placesGallery.innerHTML = ''; // clear status
+      // limit pages to avoid huge load (but we will process all pages reasonably)
+      const pageLimit = Math.min(total, 60);
+      for(let i=1;i<=pageLimit;i++){
+        const page = await pdf.getPage(i);
+        const viewport = page.getViewport({scale:1.5});
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width; canvas.height = viewport.height;
+        const ctx = canvas.getContext('2d');
+        await page.render({canvasContext:ctx, viewport}).promise;
+        // convert canvas to compressed JPEG dataURL
+        const dataUrl = await new Promise(resolve => canvas.toBlob(blob=>{
+          const img = new Image();
+          img.onload = async ()=>{
+            const small = await compressImage(img, 1200, 0.7);
+            resolve(small);
+            URL.revokeObjectURL(img.src);
+          };
+          img.src = URL.createObjectURL(blob);
+        }, 'image/png'));
+        // create thumbnail
+        const thumb = document.createElement('img');
+        thumb.src = dataUrl;
+        thumb.className = 'thumb';
+        thumb.alt = 'place-'+i;
+        thumb.onclick = ()=> setMainMedia(dataUrl, thumb);
+        placesGallery.appendChild(thumb);
+        // Save to localStorage progressively (we store array)
+        appendToSavedGallery(dataUrl);
+        await new Promise(r=>setTimeout(r, 120)); // small yield to keep UI responsive
+      }
+      // auto-select first thumbnail
+      const first = placesGallery.querySelector('img');
+      if(first) { first.classList.add('active'); setMainMedia(first.src, first); }
+    }
+
+    // Local gallery persistence helpers
+    function appendToSavedGallery(dataUrl){
+      let arr = JSON.parse(localStorage.getItem('gvr_gallery') || '[]');
+      arr.push(dataUrl);
+      localStorage.setItem('gvr_gallery', JSON.stringify(arr.slice(-60))); // keep recent 60
+    }
+    function restoreGallery(){
+      const arr = JSON.parse(localStorage.getItem('gvr_gallery') || '[]');
+      placesGallery.innerHTML = '';
+      arr.forEach((d,i)=>{
+        const thumb = document.createElement('img'); thumb.src = d; thumb.className='thumb'; thumb.alt='g-' + i;
+        thumb.onclick = ()=> setMainMedia(d, thumb);
+        placesGallery.appendChild(thumb);
+      });
+      const first = placesGallery.querySelector('img');
+      if(first) first.click();
+    }
+
+    function setMainMedia(dataUrl, thumbEl){
+      // toggle active
+      document.querySelectorAll('#placesGallery img').forEach(im=>im.classList.remove('active'));
+      if(thumbEl) thumbEl.classList.add('active');
+      const main = el('mainMedia');
+      main.innerHTML = `<img src="${dataUrl}" style="max-width:100%; max-height:100%; object-fit:contain; border-radius:8px">`;
+      // keep image accessible as main preview
+    }
+
+    pdfUploader.addEventListener('change', async (e)=>{
+      const f = e.target.files && e.target.files[0];
+      if(!f) return;
+      try{
+        await handlePdfFile(f);
+      }catch(err){
+        console.error(err);
+        alert('Failed to process PDF. Ensure it is a valid PDF with images.');
+      }
+    });
+
+    // restore gallery on load
+    restoreGallery();
+
+    /********* Logo & QR uploader *********/
+    const logoUploader = el('logoUploader');
+    const qrUploader = el('qrUploader');
+    el('logoUploaderLabel').addEventListener('click', ()=> logoUploader.click());
+    el('qrUploaderLabel').addEventListener('click', ()=> qrUploader.click());
+
+    logoUploader.addEventListener('change', async (e)=>{
+      const f = e.target.files && e.target.files[0]; if(!f) return;
+      const img = new Image();
+      img.onload = async ()=>{
+        const compressed = await compressImage(img, 600, 0.8);
+        siteLogoEl.src = compressed; localStorage.setItem('gvr_logo', compressed);
+      };
+      img.src = URL.createObjectURL(f);
+    });
+    qrUploader.addEventListener('change', async (e)=>{
+      const f = e.target.files && e.target.files[0]; if(!f) return;
+      const img = new Image();
+      img.onload = async ()=>{
+        const compressed = await compressImage(img, 600, 0.9);
+        qrImgEl.src = compressed; qrImgEl.style.display='block';
+        localStorage.setItem('gvr_qr', compressed);
+      };
+      img.src = URL.createObjectURL(f);
+    });
+
+    /********* Small utilities: escaping for safety *********/
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, (m)=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+    function escapeJs(s){
+      return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'\\"');
+    }
+
+    /********* Small UX: allow clicking thumbnails to view; double-click removes */ 
+    placesGallery.addEventListener('dblclick', (e)=>{
+      if(e.target.tagName === 'IMG'){
+        if(confirm('Remove this thumbnail from gallery?')) {
+          const url = e.target.src;
+          e.target.remove();
+          let arr = JSON.parse(localStorage.getItem('gvr_gallery') || '[]');
+          arr = arr.filter(x=>x!==url);
+          localStorage.setItem('gvr_gallery', JSON.stringify(arr));
+          // if removed main image, set first as main
+          const first = placesGallery.querySelector('img');
+          if(first) setMainMedia(first.src, first);
+        }
+      }
+    });
+
+    /********* Boot: restore any previously uploaded images (logo/qr/gallery) *********/
+    restoreSavedImages();
+    restoreGallery();
+
+    /********* Optional: allow user to clear stored images if they want (developer use) *********/
+    window.__gvr_clear_storage = function(){ localStorage.removeItem('gvr_gallery'); localStorage.removeItem('gvr_qr'); localStorage.removeItem('gvr_logo'); alert('Cleared local images. Reload page.'); };
+
+    /********* End of script *********/
+  </script>
 </body>
 </html>
