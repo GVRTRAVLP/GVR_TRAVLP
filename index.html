@@ -9,7 +9,7 @@
     <meta name="keywords" content="gvrtra, GVR_TRAVLP, weekend trips, Hyderabad trips, Papikondalu, Bhadrachalam, Ananthagiri" />
     <meta property="og:title" content="GVR_TRAVLP — Weekend Trips" />
     <meta property="og:description" content="Book weekend trips — trekking, devotional, waterfalls and combo trips. Pay online and register." />
-    <meta property="og:image" content="Screenshot 2025-12-03 095245.jpg-3792afe5-3488-4cb0-ae28-dead0227e17c" />
+    <meta property="og:image" content="uploaded:Screenshot 2025-12-03 095245.jpg-3792afe5-3488-4cb0-ae28-dead0227e17c" />
     <meta name="author" content="Ram (GVR)" />
 
     <style>
@@ -196,6 +196,7 @@
         
         /*********
           Trips data with image content IDs from "Images.pdf"
+          NOTE: When hosting this file, replace 'uploaded:...' with actual image file paths (e.g., 'assets/img/ananthagiri.jpg').
         *********/
         const trips = {
             trekking: [
@@ -258,7 +259,7 @@
           Utility functions
         *********/
         function formatPrice(priceStr) {
-            // Converts '₹1,250' to '1250' for UPI deep link (optional, but good practice)
+            // Converts '₹1,250' to '1250' for UPI deep link
             return priceStr.replace(/[₹,]/g, '').trim();
         }
 
@@ -305,7 +306,7 @@
             
             // 3. Update media (main image and gallery)
             document.getElementById('mainMediaImage').src = tripData.img;
-            // For the gallery, we can just use the main trip image for simplicity or add more related if available.
+            // For the gallery, show the current trip's image thumbnail
             const gallery = document.getElementById('placesGallery');
             gallery.innerHTML = `<img src="${tripData.img}" alt="${tripData.title}" class="active">`; 
             
@@ -388,13 +389,6 @@
             
             // Attempt to open UPI app
             window.location.href = upiUri;
-            
-            // Optional: If the app doesn't open, alert the user or open the QR image
-            setTimeout(() => {
-                // This alert only fires if the page hasn't navigated away
-                // alert('If your UPI app did not open, please scan the QR code or copy the UPI ID.');
-                // window.open('uploaded:qr.png-9b12a748-ca25-44c2-a96d-2df268330e55', '_blank');
-            }, 500);
         }
 
         window.onPaidClicked = function(){
