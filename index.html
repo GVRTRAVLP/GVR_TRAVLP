@@ -432,66 +432,6 @@ document.addEventListener('DOMContentLoaded', function(){
   populateSelect();
   populateDates();
 });
-  <script>
-function openUpi(){
-  const sel = document.getElementById('selectTrip').value;
-  const [title, price] = sel.split('||');
-
-  // Dynamic UPI deep link
-  const upiLink =
-    "upi://pay?pa=" + encodeURIComponent(UPI_ID) +
-    "&pn=" + encodeURIComponent("GVR_TRAVLP") +
-    "&am=" + encodeURIComponent(price) +
-    "&cu=INR" +
-    "&tn=" + encodeURIComponent("Trip Booking - " + title);
-
-  window.location.href = upiLink;
-}
-
-function confirmPaid(){
-  const txn = document.getElementById('txn_ref').value.trim();
-
-  document.getElementById('step3').classList.add('hidden');
-  document.getElementById('step4').classList.remove('hidden');
-  document.getElementById('step3Label').classList.remove('active');
-  document.getElementById('step4Label').classList.add('active');
-
-  // Build confirmation message
-  const sel = document.getElementById('selectTrip').value;
-  const [title, price] = sel.split('||');
-  const date = new Date(document.getElementById('selectDate').value)
-    .toLocaleDateString();
-
-  const msg = `
-Booking Received!
-Trip: ${title}
-Date: ${date}
-Passenger: ${passengerDetails.name}
-Mobile: ${passengerDetails.mobile}
-Txn Ref: ${txn || "Not provided"}
-  `.trim();
-
-  document.getElementById('confMsg').innerText = msg;
-
-  // Optional: send to your WhatsApp
-  const waMsg =
-    "New Booking:%0A%0A" +
-    encodeURIComponent(msg);
-  window.open("https://wa.me/" + ADMIN_PHONE.replace("+", "") + "?text=" + waMsg);
-}
-
-function finish() {
-  alert("Thank you for booking with GVR_TRAVLP!");
-}
-
-function startOver() {
-  location.reload();
-}
-
-// initialize
-renderTrips();
-populateSelect();
-populateDates();
 </script>
 </body>
 </html>
