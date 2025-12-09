@@ -1,195 +1,437 @@
-// app.js
-require('dotenv').config();
-const express = require('express');
-const bodyParser = require('body-parser');
-const Razorpay = require('razorpay');
-const crypto = require('crypto');
-const nodemailer = require('nodemailer');
-const cors = require('cors');
-const axios = require('axios');
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>GVR_TRAVLP — Weekend Trips (gvrtra)</title>
+<meta name="description" content="GVR_TRAVLP — Weekend trips from Hyderabad. Book trekking, devotional, waterfalls and combo trips. Search gvrtra to find us." />
+<meta name="keywords" content="gvrtra, GVR_TRAVLP, weekend trips, Hyderabad trips, Papikondalu, Bhadrachalam, Ananthagiri" />
+<meta property="og:title" content="GVR_TRAVLP — Weekend Trips" />
+<meta property="og:description" content="Book weekend trips — trekking, devotional, waterfalls and combo trips. Pay online and register." />
+<meta property="og:image" content="assets/logo.png" />
+<meta name="author" content="Ram (GVR)" />
+<style>
+:root{--accent:#ff7a18;--muted:#666;--bg:#fbf7f0;--card:#fff;--radius:12px}
+*{box-sizing:border-box}
+body{font-family:Inter,system-ui,Arial,sans-serif;margin:0;color:#222;background:var(--bg)}
+.container{max-width:1100px;margin:18px auto;padding:18px}
+.header{display:flex;gap:12px;align-items:center}
+.logo{width:86px;height:86px;border-radius:12px;object-fit:cover}
+h1{margin:0;font-size:22px}
+.sub{color:var(--muted);font-size:14px}
+.layout{display:grid;grid-template-columns:1fr 380px;gap:18px;margin-top:18px}
+.card{background:var(--card);border-radius:var(--radius);padding:14px;box-shadow:0 8px 20px rgba(0,0,0,0.06)}
+.media{height:260px;border-radius:10px;overflow:hidden}
+.gallery{display:flex;gap:8px;margin-top:10px}
+.gallery img{width:100px;height:70px;object-fit:cover;border-radius:8px}
+.groupTitle{font-weight:700;margin:10px 0 8px;font-size:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.tripCard{background:linear-gradient(#fff,#fff);border-radius:10px;padding:10px;min-height:120px;display:flex;flex-direction:column;justify-content:space-between}
+.tripCard img{width:100%;height:140px;object-fit:cover;border-radius:8px}
+.tripInfo{padding:8px 0}
+.price{color:var(--accent);font-weight:700}
+.asideSticky{position:sticky;top:18px}
+input,select,button,textarea{padding:10px;border-radius:8px;border:1px solid #eaeaea;font-size:14px;width:100%}
+button{background:var(--accent);color:#fff;border:none;cursor:pointer}
+button.ghost{background:none;color:#ff7a18;border:1px solid #ff7a18}
+.small{font-size:13px;color:var(--muted)}
+.steps{display:flex;gap:6px;margin-bottom:10px}
+.step{flex:1;padding:8px;border-radius:8px;text-align:center;background:#f7f3ef;font-weight:700}
+.step.active{background:var(--accent);color:#fff}
+.hidden{display:none}
+.footer{margin-top:22px;color:var(--muted);text-align:center;padding-bottom:40px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.media{height:200px}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <img src="assets/logo.png" class="logo" alt="GVR_LOGO">
+    <div>
+      <h1>GVR_TRAVLP — Weekend Traveller</h1>
+      <div class="sub">Follow @gvryalla · Search "gvrtra" to find us · Hyderabad trips</div>
+    </div>
+  </header>
 
-const app = express();
-app.use(bodyParser.json());
-app.use(cors());
+  <main class="layout">
+    <section>
+      <div class="card">
+        <div class="media">
+          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DO0y0pnEYBv/" data-instgrm-version="14" style="background:#fff;margin:0 auto;max-width:640px;padding:0"></blockquote>
+        </div>
+        <h2 style="margin-top:12px">What you'll see</h2>
+        <p class="small">Trip highlights, visit images and a secured pay & register flow. Choose your weekend (Sat or Sun), enter passenger details, pay and confirm.</p>
 
-// Load env
-const {
-  RAZORPAY_KEY_ID,
-  RAZORPAY_KEY_SECRET,
-  RAZORPAY_WEBHOOK_SECRET,
-  ADMIN_EMAIL,
-  ADMIN_PHONE,
-  SMTP_HOST,
-  SMTP_PORT,
-  SMTP_USER,
-  SMTP_PASS,
-  TWILIO_SID,
-  TWILIO_AUTH_TOKEN,
-  TWILIO_WHATSAPP_FROM, // e.g., 'whatsapp:+1415xxxxxxx'
-  PORT = 3000
-} = process.env;
+        <div style="margin-top:12px" id="tripList">
+          </div>
+      </div>
+    </section>
 
-const razorpay = new Razorpay({
-  key_id: RAZORPAY_KEY_ID,
-  key_secret: RAZORPAY_KEY_SECRET
-});
+    <aside>
+      <div class="card asideSticky">
+        <div class="steps">
+          <div class="step active" id="step1Label">1. Select</div>
+          <div class="step" id="step2Label">2. Details</div>
+          <div class="step" id="step3Label">3. Pay</div>
+          <div class="step" id="step4Label">4. Confirm</div>
+        </div>
 
-// Setup nodemailer
-const transporter = nodemailer.createTransport({
-  host: SMTP_HOST,
-  port: Number(SMTP_PORT || 587),
-  secure: SMTP_PORT==465, // true for 465, false for other
-  auth: {
-    user: SMTP_USER,
-    pass: SMTP_PASS
+        <div id="step1">
+          <label class="small">Choose trip</label>
+          <select id="selectTrip"></select>
+          <label class="small" style="margin-top:8px">Choose weekend date</label>
+          <select id="selectDate"></select>
+          <div style="margin-top:10px" class="small">Selected price shows at the top of the payment screen.</div>
+          <button style="margin-top:12px" onclick="goToDetails()">Proceed to Details</button>
+        </div>
+
+        <form id="step2" class="hidden" onsubmit="event.preventDefault(); goToPay();">
+          <label class="small">Full name</label>
+          <input id="p_name" required placeholder="Name">
+          <label class="small">Mobile</label>
+          <input id="p_mobile" required pattern='\d{10}' placeholder="9390xxxxxxx">
+          <label class="small">Age</label>
+          <input id="p_age" type="number" min="1" max="120" required placeholder="Age">
+          <label class="small">Gender</label>
+          <select id="p_gender" required>
+            <option value="">Select gender</option>
+            <option>Male</option><option>Female</option><option>Other</option>
+          </select>
+          <label class="small">Email (optional)</label>
+          <input id="p_email" type="email" placeholder="you@example.com">
+          <label class="small">Additional notes</label>
+          <textarea id="p_notes" rows="2" placeholder="Pickup point, medical info..."></textarea>
+
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button type="submit">Proceed to Pay</button>
+            <button type="button" class="ghost" onclick="backToSelect()">Back</button>
+          </div>
+        </form>
+
+        <div id="step3" class="hidden">
+          <h4 style="margin:0">Pay & Confirm</h4>
+          <div style="margin-top:8px" class="small">Amount: <span id="payAmount" style="font-weight:700;color:var(--accent)"></span></div>
+          <div style="margin-top:10px;display:flex;gap:10px;align-items:center">
+            <img src="assets/qr.png" class="logo" style="width:140px;height:140px;border-radius:8px" alt="QR">
+            <div>
+              <div style="font-weight:700">UPI ID</div>
+              <div style="color:var(--accent);font-weight:700" id="upiId">27722222@ybl</div>
+              <div class="small">Scan QR or use UPI apps</div>
+              <div style="margin-top:8px;display:flex;gap:6px">
+                <button onclick="copyUPI()" class="ghost">Copy UPI</button>
+                <button onclick="openUpi()">Open UPI App</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:10px" class="small">After paying click <strong>I Have Paid</strong> and enter transaction reference for verification.</div>
+          <label class="small" style="margin-top:8px">Transaction Reference / UPI ID (optional)</label>
+          <input id="txn_ref" placeholder="Txn id / reference">
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button onclick="confirmPaid()">I Have Paid</button>
+            <button class="ghost" onclick="backToDetails()">Back</button>
+          </div>
+        </div>
+
+        <div id="step4" class="hidden">
+          <h4>Confirmation</h4>
+          <p class="small" id="confMsg">We will send your details to the organizer.</p>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button onclick="finish()">Finish</button>
+            <button class="ghost" onclick="startOver()">Book another</button>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+  </main>
+
+  <footer class="footer">© GVR_TRAVLP — Travel far and feed with love · Follow @gvryalla</footer>
+</div>
+
+<script async src="//www.instagram.com/embed.js"></script>
+<script>
+const ADMIN_EMAIL = "gangavenkataramana@gmail.com";
+const ADMIN_PHONE = "+919390184813";
+const UPI_ID = "27722222@ybl";
+const PAY_LINK = ""; // optional deep link
+const tripsData = {
+  "🟦 TREKKING / NATURE": [
+    {"title":"Ananthagiri Hills","price":993,"img":"assets/places/1.jpg"},
+    {"title":"Bhongir Fort","price":905,"img":"assets/places/2.jpg"},
+    {"title":"Koil Sagar + Koilkonda","price":1250,"img":"assets/places/3.jpg"},
+    {"title":"Pocharam + Nizam Sagar","price":1122,"img":"assets/places/4.jpg"},
+    {"title":"Bogatha Waterfalls","price":1525,"img":"assets/places/5.jpg"}
+  ],
+  "🟦 DEVOTIONAL": [
+    {"title":"Yadadri","price":930,"img":"assets/places/6.jpg"},
+    {"title":"Vemulawada","price":1250,"img":"assets/places/7.jpg"},
+    {"title":"Basara","price":1460,"img":"assets/places/8.jpg"},
+    {"title":"Kondagattu","price":1393,"img":"assets/places/9.jpg"},
+    {"title":"Bhadrachalam","price":1800,"img":"assets/places/10.jpg"}
+  ],
+  "🟦 WATERFALLS / NATURE": [
+    {"title":"Papikondalu","price":1765,"img":"assets/places/11.jpg"},
+    {"title":"Laknavaram","price":1460,"img":"assets/places/12.jpg"},
+    {"title":"Ramappa Temple + Lake","price":1495,"img":"assets/places/13.jpg"}, // Changed from 1.jpg
+    {"title":"Kuntala + Pochera","price":1720,"img":"assets/places/14.jpg"}, // Changed from 2.jpg
+    {"title":"Gayatri Waterfalls","price":1645,"img":"assets/places/15.jpg"}  // Changed from 3.jpg
+  ],
+  "🟦 ANDHRA PRADESH TRIPS": [
+    {"title":"Srisailam","price":1525,"img":"assets/places/16.jpg"}, // Changed from 4.jpg
+    {"title":"Horsley Hills","price":2670,"img":"assets/places/17.jpg"}, // Changed from 5.jpg
+    {"title":"Gandikota","price":2065,"img":"assets/places/18.jpg"}, // Changed from 6.jpg
+    {"title":"Ahobilam","price":1995,"img":"assets/places/19.jpg"}  // Changed from 7.jpg
+  ],
+  "🟦 KARNATAKA TRIPS": [
+    {"title":"Bidar","price":1215,"img":"assets/places/20.jpg"}, // Changed from 8.jpg
+    {"title":"Basavakalyan Fort","price":1460,"img":"assets/places/21.jpg"}, // Changed from 9.jpg
+    {"title":"Hampi","price":2065,"img":"assets/places/22.jpg"} // Changed from 10.jpg
+  ],
+  "🟦 MAHARASHTRA TRIPS": [
+    {"title":"Nanded (Hazur Sahib)","price":1720,"img":"assets/places/23.jpg"}, // Changed from 11.jpg
+    {"title":"Ajanta & Ellora","price":2600,"img":"assets/places/24.jpg"} // Changed from 12.jpg
+  ],
+  "🟨 ANDHRA PRADESH EXTRA PLACES": [
+    {"title":"Araku Valley","price":2890,"img":"assets/places/25.jpg"}, // Changed from 1.jpg
+    {"title":"Katiki Waterfalls","price":2960,"img":"assets/places/26.jpg"}, // Changed from 2.jpg
+    {"title":"Borra Caves","price":2960,"img":"assets/places/27.jpg"} // Changed from 3.jpg
+  ],
+  "⭐ COMBO TRIPS":[
+    {"title":"Combo 1: Bhadrachalam + Papikondalu","price":1900,"img":"assets/places/28.jpg"}, // Changed from 4.jpg
+    {"title":"Combo 2: Laknavaram + Ramappa Temple","price":1600,"img":"assets/places/29.jpg"}, // Changed from 5.jpg
+    {"title":"Combo 3: Ananthagiri Hills + Kotepally","price":1150,"img":"assets/places/30.jpg"}, // Changed from 6.jpg
+    {"title":"Combo 4: Srisailam Full Trip","price":1650,"img":"assets/places/31.jpg"}, // Changed from 7.jpg
+    {"title":"Combo 5: Gandikota + Belum Caves","price":2250,"img":"assets/places/32.jpg"}, // Changed from 8.jpg
+    {"title":"Combo 6: Kuntala + Pochera + Basara","price":1950,"img":"assets/places/33.jpg"}, // Changed from 9.jpg
+    {"title":"Combo 7: Hampi","price":2200,"img":"assets/places/34.jpg"}, // Changed from 10.jpg
+    {"title":"Combo 8: Ahobilam Trek","price":2150,"img":"assets/places/35.jpg"} // Changed from 11.jpg
+  ]
+};
+
+let passengerDetails = {}; // Global variable to store details
+
+// Render trip groups
+function renderTrips(){
+  const container = document.getElementById('tripList');
+  for(const [group, arr] of Object.entries(tripsData)){
+    const section = document.createElement('div');
+    section.innerHTML = `<div class="groupTitle">${group}</div>`;
+    const grid = document.createElement('div'); grid.className = 'grid';
+    arr.forEach(item=>{
+      const card = document.createElement('div');
+      card.className = 'tripCard';
+      card.innerHTML = `<div><img src="${item.img}" alt="${item.title}"></div>
+        <div class="tripInfo"><strong>${item.title}</strong><div class="price">₹${item.price}</div></div>
+        <div><button onclick="selectTrip('${item.title.replace(/'/g,'\'')}',${item.price})">Book ₹${item.price}</button></div>`;
+      grid.appendChild(card);
+    });
+    section.appendChild(grid);
+    container.appendChild(section);
   }
-});
-
-// Twilio init (optional - for WhatsApp)
-let twilioClient = null;
-if(TWILIO_SID && TWILIO_AUTH_TOKEN){
-  const twilio = require('twilio');
-  twilioClient = twilio(TWILIO_SID, TWILIO_AUTH_TOKEN);
 }
 
-// Helper to send email to admin + customer
-async function sendEmails(booking){
-  const subject = `New Booking — ${booking.trip} — ${booking.bookingId}`;
-  const text = `
-Booking ID: ${booking.bookingId}
-Trip: ${booking.trip}
-Date: ${booking.date}
-Price: ₹${booking.price}
-Name: ${booking.name}
-Mobile: ${booking.mobile}
-Email: ${booking.email || 'N/A'}
-Payment ID: ${booking.paymentId}
-  `;
-  // To admin
-  await transporter.sendMail({
-    from: SMTP_USER,
-    to: ADMIN_EMAIL,
-    subject,
-    text
-  }).catch(err => console.error('email admin error', err));
-
-  // To customer if email exists
-  if(booking.email){
-    await transporter.sendMail({
-      from: SMTP_USER,
-      to: booking.email,
-      subject: `Your booking is confirmed — ${booking.trip}`,
-      text: `Thank you ${booking.name}!\n\nYour booking is confirmed.\n\n${text}`
-    }).catch(err => console.error('email customer error', err));
-  }
-}
-
-// Helper to send whatsapp via Twilio (optional)
-async function sendWhatsApp(booking){
-  if(!twilioClient) return;
-  const to = 'whatsapp:+91' + booking.mobile; // assumes Indian number
-  const body = `Thank you ${booking.name}! Your booking is confirmed.\n\nBooking ID: ${booking.bookingId}\nTrip: ${booking.trip}\nDate: ${booking.date}\nPrice: ₹${booking.price}\nPayment ID: ${booking.paymentId}\nOrganizer: ${ADMIN_PHONE}`;
-
-  try{
-    await twilioClient.messages.create({
-      from: TWILIO_WHATSAPP_FROM, // e.g. 'whatsapp:+1415xxx'
-      to,
-      body
-    });
-  }catch(err){
-    console.error('whatsapp send error', err);
-  }
-}
-
-// 1) Create order endpoint - called by front-end
-app.post('/create-order', async (req, res) => {
-  try{
-    const { amount, currency='INR', customer, trip } = req.body;
-    if(!amount || !customer || !customer.mobile) return res.status(400).json({ message: 'Missing fields' });
-
-    // create order in Razorpay (amount in paise)
-    const order = await razorpay.orders.create({
-      amount: Math.round(amount * 100), // rupees to paise
-      currency,
-      receipt: `receipt_${Date.now()}`,
-      payment_capture: 1, // auto capture
-      notes: {
-        customer_name: customer.name || '',
-        customer_mobile: customer.mobile,
-        trip_title: trip.title || '',
-        trip_date: trip.date || ''
-      }
-    });
-
-    res.json({
-      key: RAZORPAY_KEY_ID,
-      order
-    });
-  }catch(err){
-    console.error(err);
-    res.status(500).json({ message: 'Order creation failed', error: err.message });
-  }
-});
-
-// 2) Verify payment endpoint - called by frontend after checkout success
-app.post('/verify-payment', async (req, res) => {
-  try{
-    const { razorpay_payment_id, razorpay_order_id, razorpay_signature, customer, trip } = req.body;
-    // verify signature
-    const hmac = crypto.createHmac('sha256', RAZORPAY_KEY_SECRET);
-    hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
-    const generated_signature = hmac.digest('hex');
-
-    if(generated_signature !== razorpay_signature){
-      return res.status(400).json({ message: 'Invalid signature' });
+// populate selectTrip dropdown
+function populateSelect(){
+  const sel = document.getElementById('selectTrip');
+  sel.innerHTML = '';
+  for(const arr of Object.values(tripsData)){
+    for(const t of arr){
+      const opt = document.createElement('option');
+      opt.value = `${t.title}||${t.price}`;
+      opt.text = `${t.title} — ₹${t.price}`;
+      sel.appendChild(opt);
     }
-
-    // At this point payment is valid. Create booking record (in real app save to DB)
-    const booking = {
-      bookingId: 'GVRBOOK' + Date.now(),
-      paymentId: razorpay_payment_id,
-      orderId: razorpay_order_id,
-      trip: trip.title,
-      date: trip.date,
-      price: trip.price,
-      name: customer.name,
-      mobile: customer.mobile,
-      email: customer.email,
-      age: customer.age,
-      gender: customer.gender,
-      notes: customer.notes
-    };
-
-    // Send emails and whatsapp notifications
-    sendEmails(booking).catch(console.error);
-    sendWhatsApp(booking).catch(console.error);
-
-    // Optionally send organizer WhatsApp/email separately (already sent to ADMIN_EMAIL)
-    // Return booking to frontend
-    res.json({ success: true, booking });
-  }catch(err){
-    console.error(err);
-    res.status(500).json({ message: 'Verification error', error: err.message });
   }
-});
+}
 
-// 3) Razorpay webhook endpoint (recommended) — verify webhook signature and process events like payment.captured
-app.post('/webhook', bodyParser.raw({ type: '*/*' }), (req, res) => {
-  const signature = req.headers['x-razorpay-signature'];
-  const payload = req.body; // raw buffer
-  const expected = crypto.createHmac('sha256', RAZORPAY_WEBHOOK_SECRET).update(payload).digest('hex');
-
-  if(signature === expected){
-    const event = JSON.parse(payload.toString());
-    // handle event e.g., payment.captured, payment.failed
-    console.log('webhook event', event.event);
-
-    // OPTIONAL: for payment.captured, you may re-check and send notifications if not already sent
-
-    res.json({ ok: true });
-  }else{
-    res.status(400).send('Invalid signature');
+// weekend dates generator
+function generateWeekends(fromDate, endDate){
+  const arr=[];
+  const d = new Date(fromDate);
+  while(d<=endDate){
+    if(d.getDay()===0 || d.getDay()===6){
+      arr.push(new Date(d));
+    }
+    d.setDate(d.getDate()+1);
   }
-});
+  return arr;
+}
+function populateDates(){
+  const sel = document.getElementById('selectDate');
+  const today = new Date();
+  const end = new Date('2026-12-31');
+  const weekends = generateWeekends(today, end);
+  weekends.forEach(dt=>{
+    const o = document.createElement('option');
+    o.value = dt.toISOString();
+    o.text = dt.toLocaleDateString(undefined,{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
+    sel.appendChild(o);
+  });
+}
 
-app.listen(PORT, ()=>console.log(`Server listening on ${PORT}`));
+// flow helpers
+function selectTrip(title, price){
+  // set select options and go to details
+  const sel = document.getElementById('selectTrip');
+  for(let i=0;i<sel.options.length;i++){
+    if(sel.options[i].value.startsWith(title + '||')){ sel.selectedIndex = i; break; }
+  }
+  goToDetails();
+}
+function goToDetails(){
+  document.getElementById('step1').classList.add('hidden');
+  document.getElementById('step2').classList.remove('hidden');
+  document.getElementById('step1Label').classList.remove('active');
+  document.getElementById('step2Label').classList.add('active');
+}
+function backToSelect(){
+  document.getElementById('step2').classList.add('hidden');
+  document.getElementById('step1').classList.remove('hidden');
+  document.getElementById('step2Label').classList.remove('active');
+  document.getElementById('step1Label').classList.add('active');
+}
+function goToPay(){
+  // validate and save details
+  const name = document.getElementById('p_name').value.trim();
+  const mobile = document.getElementById('p_mobile').value.trim();
+  const age = document.getElementById('p_age').value.trim();
+  const gender = document.getElementById('p_gender').value.trim();
+  const email = document.getElementById('p_email').value.trim();
+  const notes = document.getElementById('p_notes').value.trim();
+
+  if(!name || !mobile.match(/^\d{10}$/) || !age || !gender){ 
+      alert('Please enter valid Name, 10-digit Mobile, Age, and select Gender.'); 
+      return; 
+  }
+
+  // Save details to global variable
+  passengerDetails = { name, mobile, age, gender, email, notes };
+
+  document.getElementById('step2').classList.add('hidden');
+  document.getElementById('step3').classList.remove('hidden');
+  document.getElementById('step2Label').classList.remove('active');
+  document.getElementById('step3Label').classList.add('active');
+  
+  // show amount
+  const sel = document.getElementById('selectTrip').value;
+  const price = sel.split('||')[1];
+  document.getElementById('payAmount').textContent = '₹' + price;
+}
+function backToDetails(){
+  document.getElementById('step3').classList.add('hidden');
+  document.getElementById('step2').classList.remove('hidden');
+  document.getElementById('step3Label').classList.remove('active');
+  document.getElementById('step2Label').classList.add('active');
+}
+function copyUPI(){
+  navigator.clipboard && navigator.clipboard.writeText(UPI_ID).then(()=>alert('UPI copied: '+UPI_ID), ()=>{ alert('Copy manually: '+UPI_ID) });
+}
+function openUpi(){
+  const sel = document.getElementById('selectTrip').value;
+  const [title, price] = sel.split('||');
+  // Construct UPI deep link with dynamic price
+  const uri = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent('GVR_TRAVLP')}&mc=0000&tid=${new Date().getTime()}&tr=Ref${new Date().getTime()}&tn=${encodeURIComponent('Trip payment for ' + title)}&am=${price}&cu=INR`;
+  
+  // Try to open UPI app first
+  window.location.href = uri;
+  
+  // Alert for manual payment if deep link fails (after a short delay)
+  setTimeout(() => {
+     alert('If the UPI app did not open, please pay manually by scanning the QR or using the UPI ID.');
+  }, 1000);
+}
+
+function confirmPaid(){
+  const sel = document.getElementById('selectTrip').value;
+  const [title, price] = sel.split('||');
+  const date = new Date(document.getElementById('selectDate').value).toLocaleDateString(undefined,{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
+  const txn = document.getElementById('txn_ref').value.trim();
+
+  // Construct final payload
+  const payload = {
+    trip: title,
+    price: price,
+    date: date,
+    name: passengerDetails.name, 
+    mobile: passengerDetails.mobile, 
+    age: passengerDetails.age, 
+    gender: passengerDetails.gender, 
+    email: passengerDetails.email, 
+    notes: passengerDetails.notes, 
+    txn: txn || 'Not Provided',
+    submittedAt: new Date().toISOString()
+  };
+
+  // Summary for the user to copy/send
+  const bookingSummary = `
+Trip: ${payload.trip}
+Date: ${payload.date}
+Price: ₹${payload.price}
+---
+Name: ${payload.name}
+Mobile: ${payload.mobile}
+Age/Gender: ${payload.age}/${payload.gender}
+Email: ${payload.email || 'N/A'}
+Notes: ${payload.notes || 'N/A'}
+---
+Payment Txn Ref: ${payload.txn}
+  `;
+
+  // WhatsApp link creation
+  const whatsappUrl = 'https://wa.me/' + ADMIN_PHONE.replace(/\D/g,'') + '?text=' + encodeURIComponent('New Registration & Payment Confirmation:\n\n' + bookingSummary);
+
+  // Show confirmation step
+  document.getElementById('step3').classList.add('hidden');
+  document.getElementById('step4').classList.remove('hidden');
+  document.getElementById('step3Label').classList.remove('active');
+  document.getElementById('step4Label').classList.add('active');
+
+  // Update confirmation message with actionable items
+  document.getElementById('confMsg').innerHTML = `
+    Thank you <strong>${payload.name}</strong>. Your registration is complete!
+    <br><br>
+    <strong>Please copy your booking details and share them with the organizer immediately to confirm your seat:</strong>
+    <br>
+    <textarea rows="8" style="width:100%; margin-top: 8px; font-size: 13px; color: #333;" id="bookingDetails" readonly>${bookingSummary.trim()}</textarea>
+    <div style="display:flex;gap:8px;margin-top:8px">
+        <button onclick="copyBookingDetails()" class="ghost">Copy Details</button>
+        <a href="${whatsappUrl}" target="_blank" style="width: 100%; text-decoration: none;">
+            <button style="background-color: #25d366;">Send on WhatsApp</button>
+        </a>
+    </div>
+  `;
+}
+function copyBookingDetails(){
+    const details = document.getElementById('bookingDetails');
+    details.select();
+    details.setSelectionRange(0, 99999); 
+    navigator.clipboard.writeText(details.value).then(() => {
+        alert('Booking details copied to clipboard! Now send them to the organizer.');
+    }).catch(err => {
+        alert('Could not automatically copy. Please copy the details manually from the text box.');
+    });
+}
+
+function finish(){ alert('Thanks! Organizer will contact you soon.'); startOver(); }
+function startOver(){
+  // reset to step1 and clear inputs
+  document.getElementById('step4').classList.add('hidden');
+  document.getElementById('step1').classList.remove('hidden');
+  document.getElementById('step4Label').classList.remove('active');
+  document.getElementById('step1Label').classList.add('active');
+  // Clear input fields
+  document.getElementById('p_name').value=''; document.getElementById('p_mobile').value=''; document.getElementById('p_age').value='';
+  document.getElementById('p_gender').value=''; document.getElementById('p_email').value=''; document.getElementById('p_notes').value='';
+  document.getElementById('txn_ref').value='';
+  passengerDetails = {}; // Clear stored data
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  renderTrips();
+  populateSelect();
+  populateDates();
+});
+</script>
+</body>
+</html>
