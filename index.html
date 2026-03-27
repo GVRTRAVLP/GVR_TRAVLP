@@ -1,135 +1,45 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>GVR_TRAVLP — Weekend Trips</title>
-
-<style>
-:root{--accent:#ff7a18;--muted:#666;--bg:#fbf7f0;--card:#fff;--radius:12px}
-*{box-sizing:border-box}
-body{font-family:Inter,system-ui,Arial,sans-serif;margin:0;background:var(--bg)}
-.container{max-width:1100px;margin:18px auto;padding:18px}
-.header{display:flex;gap:12px;align-items:center}
-.logo{width:80px;height:80px;border-radius:12px}
-.layout{display:grid;grid-template-columns:1fr 380px;gap:18px;margin-top:18px}
-.card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 8px 20px rgba(0,0,0,.06)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
-.tripCard{border-radius:10px;padding:10px}
-.tripCard img{width:100%;height:140px;object-fit:cover;border-radius:8px}
-button{padding:10px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer}
-button.ghost{background:none;border:1px solid var(--accent);color:var(--accent)}
-.small{font-size:13px;color:#666}
-.hidden{display:none}
-.steps{display:flex;gap:6px;margin-bottom:10px}
-.step{flex:1;padding:8px;text-align:center;border-radius:8px;background:#f3efe9;font-weight:600}
-.step.active{background:var(--accent);color:#fff}
-@media(max-width:900px){.layout{grid-template-columns:1fr}}
-</style>
-</head>
-
-<body>
-<div class="container">
-
-<header class="header">
-  <img src="assets/logo.png" class="logo">
-  <div>
-    <h2>GVR_TRAVLP — Weekend Traveller</h2>
-    <div class="small">Hyderabad weekend trips · @gvryalla</div>
-  </div>
-</header>
-
-<main class="layout">
-
-<section>
-<div class="card">
-  <div id="tripList"></div>
-</div>
-</section>
-
-<aside>
-<div class="card">
-  <div class="steps">
-    <div class="step active" id="s1">1. Select</div>
-    <div class="step" id="s2">2. Details</div>
-    <div class="step" id="s3">3. Pay</div>
-    <div class="step" id="s4">4. Confirm</div>
-  </div>
-
-  <div id="step1">
-    <label class="small">Choose Trip</label>
-    <select id="selectTrip"></select>
-
-    <label class="small">Choose Weekend</label>
-    <select id="selectDate"></select>
-
-    <button style="margin-top:10px" onclick="goToDetails()">Proceed</button>
-  </div>
-
-  <form id="step2" class="hidden" onsubmit="event.preventDefault();goToPay();">
-    <input id="name" placeholder="Full Name" required>
-    <input id="mobile" placeholder="Mobile" pattern="\d{10}" required>
-    <input id="age" type="number" placeholder="Age" required>
-    <select id="gender" required>
-      <option value="">Gender</option>
-      <option>Male</option><option>Female</option><option>Other</option>
-    </select>
-
-    <button type="submit">Proceed to Pay</button>
-    <button type="button" class="ghost" onclick="backToSelect()">Back</button>
-  </form>
-
-  <div id="step3" class="hidden">
-    <p class="small"><b>Payment:</b> Scan QR or pay via UPI</p>
-    <img src="assets/qr.png" style="width:140px;border-radius:8px">
-    <p><b>UPI ID:</b> 27722222@ybl</p>
-
-    <input id="txn" placeholder="Transaction Reference (optional)">
-    <button onclick="confirmPaid()">I Have Paid</button>
-  </div>
-
-  <div id="step4" class="hidden">
-    <h4>Booking Submitted</h4>
-    <p class="small">Please send booking details to organizer.</p>
-    <textarea id="summary" rows="7" readonly></textarea>
-    <button onclick="copySummary()">Copy Details</button>
-  </div>
-</div>
-</aside>
-
-</main>
-</div>
-
 <script>
-const tripsData={
-"TREKKING / NATURE":["Ananthagiri Hills","Bhongir Fort","Bogatha Waterfalls"],
-"DEVOTIONAL":["Yadadri","Vemulawada","Basara","Bhadrachalam"],
-"WATERFALLS":["Papikondalu","Laknavaram","Kuntala","Gayatri"],
-"COMBO TRIPS":["Bhadrachalam + Papikondalu","Laknavaram + Ramappa"]
+
+const tripsData = {
+"ONE DAY TRIP":[
+{
+name:"Hogenakkal Falls Trip",
+price:"₹1500 / Person",
+details:"Morning Breakfast + Afternoon Lunch + Travel + Beautiful Photos & Videos",
+place:"Hogenakkal Falls"
+}
+]
 };
 
 function renderTrips(){
 const box=document.getElementById("tripList");
+
 for(const [group,trips] of Object.entries(tripsData)){
   box.innerHTML+=`<h3>${group}</h3>`;
   const grid=document.createElement("div");
   grid.className="grid";
+
   trips.forEach(t=>{
     grid.innerHTML+=`
     <div class="tripCard">
-      <strong>${t}</strong>
-      <button onclick="selectTrip('${t}')">Book Now</button>
+      <img src="assets/hogenakkal.jpg">
+      <h4>${t.name}</h4>
+      <p class="small">${t.details}</p>
+      <p><b>${t.price}</b></p>
+      <button onclick="selectTrip('${t.place}')">Book Now</button>
     </div>`;
   });
+
   box.appendChild(grid);
 }
 }
 
 function populateSelect(){
 const sel=document.getElementById("selectTrip");
+
 for(const arr of Object.values(tripsData)){
   arr.forEach(t=>{
-    sel.innerHTML+=`<option>${t}</option>`;
+    sel.innerHTML+=`<option>${t.place}</option>`;
   });
 }
 }
@@ -137,6 +47,7 @@ for(const arr of Object.values(tripsData)){
 function populateDates(){
 const sel=document.getElementById("selectDate");
 let d=new Date();
+
 for(let i=0;i<120;i++){
  if(d.getDay()==0||d.getDay()==6){
   sel.innerHTML+=`<option>${d.toDateString()}</option>`;
@@ -160,12 +71,14 @@ step(2,3);
 
 function confirmPaid(){
 const s=document.getElementById("summary");
+
 s.value=`Trip: ${selectTrip.value}
 Date: ${selectDate.value}
 Name: ${name.value}
 Mobile: ${mobile.value}
 Age/Gender: ${age.value}/${gender.value}
 Txn: ${txn.value||"N/A"}`;
+
 step(3,4);
 }
 
@@ -176,14 +89,19 @@ document.getElementById(`s${a}`).classList.remove("active");
 document.getElementById(`s${b}`).classList.add("active");
 }
 
-function backToSelect(){step(2,1);}
-function copySummary(){navigator.clipboard.writeText(summary.value);alert("Copied");}
+function backToSelect(){
+step(2,1);
+}
+
+function copySummary(){
+navigator.clipboard.writeText(summary.value);
+alert("Copied");
+}
 
 document.addEventListener("DOMContentLoaded",()=>{
 renderTrips();
 populateSelect();
 populateDates();
 });
+
 </script>
-</body>
-</html>
